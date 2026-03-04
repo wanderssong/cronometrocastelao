@@ -1,542 +1,587 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Desafio Castelão</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Cronômetro Castelão • Desafio 10.00s</title>
 
     <style>
+        /* =========================
+       TEMA (mantido no estilo “claro + azul + laranja”)
+       ========================= */
+        :root {
+            --bg: #eef3f9;
+            --shadow: rgba(0, 0, 0, .18);
+
+            --navA: #0a3a55;
+            --navB: #0b4a6b;
+
+            --card: rgba(255, 255, 255, .85);
+            --stroke: rgba(10, 58, 85, .16);
+
+            --text: #0a2e44;
+            --muted: rgba(10, 46, 68, .70);
+
+            --orangeA: #ff8b22;
+            --orangeB: #ea6e14;
+
+            --redA: #ff3b3b;
+            --redB: #e42828;
+
+            --good: rgba(0, 160, 90, .14);
+            --warn: rgba(255, 165, 0, .14);
+            --bad: rgba(255, 60, 60, .14);
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html,
+        body {
+            height: 100%;
         }
 
         body {
-            height: 100svh;
+            margin: 0;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(180deg, #f4f7fb, #e6edf4);
-            color: #0b3b5b;
+            /* sem rolagem */
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background:
+                radial-gradient(1200px 900px at 50% 20%, rgba(255, 140, 40, .12), transparent 58%),
+                radial-gradient(1100px 850px at 20% 70%, rgba(10, 74, 107, .12), transparent 60%),
+                linear-gradient(180deg, #f6f9ff, var(--bg));
+            color: var(--text);
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            touch-action: manipulation;
         }
 
-        /* CONTAINER */
-        .container {
-            width: 100%;
-            max-width: 600px;
-            height: 100%;
+        /* =========================
+       LAYOUT SEM ROLAGEM
+       ========================= */
+        .app {
+            height: 100svh;
+            height: 100dvh;
             display: grid;
             grid-template-rows: auto 1fr auto;
-            padding: 12px;
-            gap: 12px;
-            position: relative;
+            gap: 10px;
+            padding: env(safe-area-inset-top) 14px env(safe-area-inset-bottom) 14px;
+            max-width: 720px;
+            margin: 0 auto;
         }
 
-        /* HEADER */
-        .header {
+        /* =========================
+       HEADER
+       ========================= */
+        .topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 14px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #0b3b5b, #145f88);
-            color: white;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            gap: 12px;
+            padding: 14px 14px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, var(--navB), var(--navA));
+            box-shadow: 0 16px 40px var(--shadow);
+            color: #fff;
         }
 
-        .logoArea {
+        .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            min-width: 0;
         }
 
-        .logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
-            background: white;
-            padding: 4px;
+        .brandLogo {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .92);
+            padding: 6px;
+            object-fit: contain;
+            flex: 0 0 auto;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .10);
+        }
+
+        .brandText {
+            min-width: 0;
+            line-height: 1.15;
         }
 
         .title {
-            font-size: 14px;
-            font-weight: bold;
+            font-weight: 900;
+            letter-spacing: .3px;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .subtitle {
-            font-size: 12px;
-            opacity: .9;
+            margin-top: 4px;
+            font-size: 15px;
+            opacity: .92;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .full {
-            font-size: 13px;
-            padding: 8px 12px;
-            border-radius: 12px;
-            border: none;
-            background: #dd6a1e;
-            color: white;
-            font-weight: bold;
+        .fullBtn {
+            flex: 0 0 auto;
+            border: 0;
+            padding: 14px 16px;
+            border-radius: 18px;
+            font-weight: 900;
+            letter-spacing: .2px;
+            color: #fff;
+            background: linear-gradient(180deg, #f08b2a, #d97214);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, .18);
         }
 
-        /* MAIN */
+        .fullBtn:active {
+            transform: scale(.98);
+        }
+
+        /* =========================
+       MAIN
+       ========================= */
         .main {
-            display: flex;
-            flex-direction: column;
+            min-height: 0;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: 12px;
             align-items: center;
-            justify-content: center;
-            gap: 18px;
         }
 
-        /* TIMER */
+        /* Timer */
+        .timerWrap {
+            display: grid;
+            gap: 12px;
+            justify-items: center;
+            align-items: center;
+            padding-top: 2px;
+        }
+
         .timer {
             display: flex;
-            align-items: flex-end;
-            font-weight: bold;
-            color: #0b3b5b;
-            transition: transform .2s ease;
-        }
-
-        .timer.shake {
-            animation: shake .45s ease;
-        }
-
-        @keyframes shake {
-            0% {
-                transform: translateX(0);
-            }
-
-            20% {
-                transform: translateX(-8px);
-            }
-
-            40% {
-                transform: translateX(8px);
-            }
-
-            60% {
-                transform: translateX(-6px);
-            }
-
-            80% {
-                transform: translateX(6px);
-            }
-
-            100% {
-                transform: translateX(0);
-            }
+            align-items: baseline;
+            justify-content: center;
+            line-height: 1;
+            font-weight: 950;
+            letter-spacing: 1px;
+            color: var(--text);
         }
 
         .timer .sec {
-            font-size: clamp(70px, 13vw, 110px);
+            font-size: clamp(64px, 14vw, 120px);
         }
 
         .timer .dot {
-            font-size: clamp(26px, 5vw, 40px);
+            font-size: clamp(22px, 6vw, 46px);
             margin: 0 6px;
+            opacity: .9;
         }
 
         .timer .ms {
-            font-size: clamp(40px, 8vw, 70px);
+            font-size: clamp(34px, 9vw, 78px);
+            opacity: .98;
         }
 
-        /* STATUS */
-        .status {
-            padding: 12px 18px;
-            border-radius: 30px;
-            background: white;
-            font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* BOTÃO */
-        .bigButton {
-            --size: clamp(220px, 34svh, 300px);
-            width: var(--size);
-            height: var(--size);
-            border-radius: 50%;
-            border: none;
+        /* Status */
+        .statusPill {
+            width: min(560px, 92%);
+            padding: 14px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid var(--stroke);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, .10);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(22px, 5vw, 30px);
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(180deg, #ff8c3a, #dd6a1e);
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3), inset 0 4px 8px rgba(255, 255, 255, 0.4);
-            transition: .15s;
-            position: relative;
-        }
-
-        .bigButton:active {
-            transform: scale(.96);
-        }
-
-        .bigButton.stop {
-            background: linear-gradient(180deg, #ff3a3a, #b00000);
-        }
-
-        /* RESET */
-        .reset {
-            padding: 14px;
-            border: none;
-            border-radius: 14px;
-            background: #0b3b5b;
-            color: white;
-            width: 100%;
-            font-weight: bold;
-        }
-
-        /* FOOTER */
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            opacity: .8;
-            color: #0b3b5b;
-        }
-
-        /* OVERLAY ANIMAÇÕES */
-        .overlay {
-            position: absolute;
-            inset: 12px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-            opacity: 0;
-            transform: scale(.98);
-            transition: opacity .18s ease, transform .18s ease;
-        }
-
-        .overlay.show {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .overlayCard {
-            width: min(520px, 92%);
-            border-radius: 22px;
-            padding: 18px 16px;
-            text-align: center;
-            color: #fff;
-            box-shadow: 0 25px 70px rgba(0, 0, 0, .35);
-            border: 1px solid rgba(255, 255, 255, .18);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .overlayTitle {
-            font-size: clamp(20px, 5.2vw, 34px);
+            gap: 10px;
             font-weight: 900;
-            letter-spacing: .6px;
+            color: var(--text);
         }
 
-        .overlaySub {
-            margin-top: 8px;
-            font-size: 14px;
-            opacity: .95;
-            font-weight: 800;
-        }
-
-        .overlayHint {
-            margin-top: 10px;
-            font-size: 12px;
-            opacity: .9;
-        }
-
-        /* confetti simples */
-        .confetti {
-            position: absolute;
-            inset: -30px;
-            opacity: .9;
-            pointer-events: none;
-            filter: blur(.2px);
-        }
-
-        .confetti i {
-            position: absolute;
+        .statusDot {
             width: 10px;
-            height: 16px;
-            border-radius: 4px;
-            opacity: .95;
-            animation: fall 900ms ease-out forwards;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(10, 46, 68, .35);
+            box-shadow: 0 0 0 4px rgba(10, 46, 68, .10);
         }
 
-        @keyframes fall {
-            0% {
-                transform: translateY(-40px) rotate(0deg) scale(.9);
-                opacity: 0;
-            }
-
-            20% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(340px) rotate(260deg) scale(1);
-                opacity: 0;
-            }
+        .statusPill.good {
+            background: rgba(0, 160, 90, .10);
+            border-color: rgba(0, 160, 90, .20);
         }
 
-        /* tipos */
-        .overlay.win .overlayCard {
-            background: linear-gradient(135deg, rgba(11, 59, 91, .92), rgba(221, 106, 30, .92));
+        .statusPill.good .statusDot {
+            background: #00a05a;
+            box-shadow: 0 0 0 4px rgba(0, 160, 90, .18);
         }
 
-        .overlay.win .overlayTitle::before {
-            content: "🏆 ";
+        .statusPill.warn {
+            background: rgba(255, 165, 0, .10);
+            border-color: rgba(255, 165, 0, .22);
         }
 
-        .overlay.mid .overlayCard {
-            background: linear-gradient(135deg, rgba(255, 185, 0, .88), rgba(221, 106, 30, .88));
+        .statusPill.warn .statusDot {
+            background: #ffa500;
+            box-shadow: 0 0 0 4px rgba(255, 165, 0, .18);
         }
 
-        .overlay.mid .overlayTitle::before {
-            content: "⚠️ ";
+        .statusPill.bad {
+            background: rgba(255, 60, 60, .10);
+            border-color: rgba(255, 60, 60, .22);
         }
 
-        .overlay.lose .overlayCard {
-            background: linear-gradient(135deg, rgba(255, 58, 58, .88), rgba(11, 59, 91, .82));
+        .statusPill.bad .statusDot {
+            background: #ff3b3b;
+            box-shadow: 0 0 0 4px rgba(255, 60, 60, .18);
         }
 
-        .overlay.lose .overlayTitle::before {
-            content: "😅 ";
+        /* =========================
+       BOTÃO PRINCIPAL (proporcional no mobile)
+       ========================= */
+        .bigBtn {
+            justify-self: center;
+
+            /* ✅ tamanho segue ALTURA real (resolve desproporção) */
+            --btn: clamp(210px, 36svh, 380px);
+            width: var(--btn);
+            height: var(--btn);
+
+            border: 0;
+            border-radius: 999px;
+            background:
+                radial-gradient(700px 520px at 35% 25%, rgba(255, 255, 255, .22), transparent 58%),
+                radial-gradient(700px 520px at 70% 75%, rgba(0, 0, 0, .18), transparent 62%),
+                linear-gradient(180deg, var(--orangeA), var(--orangeB));
+            box-shadow:
+                0 26px 50px rgba(0, 0, 0, .18),
+                inset 0 0 0 10px rgba(255, 255, 255, .12);
+            color: #fff;
+            font-weight: 950;
+            letter-spacing: 1px;
+            font-size: clamp(18px, 5vw, 34px);
         }
 
-        /* pulso da vitória */
-        .overlay.win .overlayCard {
-            animation: pop 700ms ease both;
+        .bigBtn:active {
+            transform: scale(.985);
         }
 
-        @keyframes pop {
-            0% {
-                transform: scale(.92);
-            }
-
-            55% {
-                transform: scale(1.03);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+        .bigBtn.stop {
+            background:
+                radial-gradient(700px 520px at 35% 25%, rgba(255, 255, 255, .18), transparent 58%),
+                radial-gradient(700px 520px at 70% 75%, rgba(0, 0, 0, .18), transparent 62%),
+                linear-gradient(180deg, var(--redA), var(--redB));
         }
 
-        /* modo compacto */
+        /* Reiniciar */
+        .resetBtn {
+            justify-self: center;
+            width: min(640px, 92%);
+            padding: 18px 16px;
+            border-radius: 18px;
+            border: 0;
+            background: linear-gradient(180deg, var(--navB), var(--navA));
+            color: #fff;
+            font-weight: 950;
+            letter-spacing: .6px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, .16);
+        }
+
+        .resetBtn:active {
+            transform: scale(.99);
+        }
+
+        /* Rodapé */
+        .footNote {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(10, 46, 68, .65);
+            padding: 6px 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sep {
+            opacity: .55;
+            margin: 0 8px;
+        }
+
+        /* =========================
+       MODO COMPACTO (telas baixas)
+       ========================= */
         @media (max-height: 740px) {
-            .main {
+            .app {
+                gap: 8px;
+            }
+
+            .topbar {
+                padding: 12px 12px;
+                border-radius: 16px;
+            }
+
+            .brandLogo {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+            }
+
+            .title {
+                font-size: 16px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+            }
+
+            .fullBtn {
+                padding: 12px 14px;
+                border-radius: 16px;
+            }
+
+            .timerWrap {
+                gap: 10px;
+            }
+
+            .statusPill {
+                padding: 12px 14px;
+            }
+
+            .bigBtn {
+                --btn: clamp(190px, 34svh, 330px);
+            }
+
+            .resetBtn {
+                padding: 16px 14px;
+            }
+
+            .footNote {
+                font-size: 13px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .app {
+                padding: 18px;
                 gap: 14px;
             }
 
-            .status {
-                padding: 10px 16px;
+            .topbar {
+                border-radius: 22px;
             }
 
-            .reset {
-                padding: 12px;
-            }
-
-            .logo {
-                width: 40px;
-                height: 40px;
+            .bigBtn {
+                --btn: clamp(280px, 40svh, 430px);
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-
-        <!-- OVERLAY -->
-        <div class="overlay" id="overlay">
-            <div class="overlayCard">
-                <div class="confetti" id="confetti"></div>
-                <div class="overlayTitle" id="overlayTitle">Você ganhou!</div>
-                <div class="overlaySub" id="overlaySub">CRAVOU 10.00</div>
-                <div class="overlayHint" id="overlayHint">Toque em REINICIAR para jogar novamente</div>
-            </div>
-        </div>
-
-        <header class="header">
-            <div class="logoArea">
-                <img class="logo" src="img/logo.png" alt="Castelão">
-                <div>
+    <div class="app">
+        <header class="topbar">
+            <div class="brand">
+                <!-- Troque o src pela SUA logo -->
+                <img class="brandLogo" src="IMG/logo.png" alt="Castelão" />
+                <div class="brandText">
                     <div class="title">DESAFIO 10.00s</div>
                     <div class="subtitle">10.00 = prêmio TOP • 9.95–10.05 = prêmio menor</div>
                 </div>
             </div>
-            <button class="full" onclick="toggleFull()">Tela cheia</button>
+
+            <button class="fullBtn" id="fullBtn" type="button">Tela cheia</button>
         </header>
 
-        <div class="main">
-            <div class="timer" id="timer">
-                <div class="sec" id="sec">00</div>
-                <div class="dot">.</div>
-                <div class="ms" id="ms">00</div>
+        <main class="main">
+            <div class="timerWrap">
+                <div class="timer" aria-label="Cronômetro">
+                    <span class="sec" id="sec">00</span>
+                    <span class="dot">.</span>
+                    <span class="ms" id="ms">00</span>
+                </div>
+
+                <div class="statusPill" id="statusPill">
+                    <span class="statusDot"></span>
+                    <span id="statusText">Toque em INICIAR para começar</span>
+                </div>
             </div>
 
-            <div class="status" id="status">Toque em INICIAR para começar</div>
+            <button class="bigBtn" id="toggleBtn" type="button">INICIAR</button>
 
-            <button class="bigButton" id="btn">INICIAR</button>
+            <button class="resetBtn" id="resetBtn" type="button">REINICIAR</button>
+        </main>
 
-            <button class="reset" onclick="reset()">REINICIAR</button>
-        </div>
-
-        <div class="footer">
-            Castelão • Desafio presencial • Dica: treine no link da bio
-        </div>
-
+        <footer class="footNote">
+            Castelão • Desafio presencial <span class="sep">•</span> Dica: treine no link da bio
+        </footer>
     </div>
 
     <script>
-        let running = false;
-        let startTime = 0;
-        let elapsed = 0;
-        let raf = null;
-
-        const sec = document.getElementById("sec");
-        const ms = document.getElementById("ms");
-        const btn = document.getElementById("btn");
-        const status = document.getElementById("status");
-        const timer = document.getElementById("timer");
-
-        const overlay = document.getElementById("overlay");
-        const overlayTitle = document.getElementById("overlayTitle");
-        const overlaySub = document.getElementById("overlaySub");
-        const overlayHint = document.getElementById("overlayHint");
-        const confetti = document.getElementById("confetti");
-
-        // regras
+        // =========================
+        // CONFIG DO DESAFIO
+        // =========================
         const TARGET = 10.00;
         const TOL_MIN = 9.95;
         const TOL_MAX = 10.05;
 
-        function update() {
+        // =========================
+        // ELEMENTOS
+        // =========================
+        const secEl = document.getElementById('sec');
+        const msEl = document.getElementById('ms');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const statusText = document.getElementById('statusText');
+        const statusPill = document.getElementById('statusPill');
+        const fullBtn = document.getElementById('fullBtn');
+
+        // =========================
+        // ESTADO
+        // =========================
+        let running = false;
+        let rafId = null;
+        let startAt = 0;   // performance.now() ao iniciar
+        let elapsed = 0;   // segundos acumulados ao parar
+
+        // =========================
+        // HELPERS
+        // =========================
+        const pad2 = (n) => String(n).padStart(2, '0');
+
+        // Render “SS.CC” (centésimos) SEM conflito
+        function render(seconds) {
+            const s = Math.floor(seconds) % 60;
+            const cent = Math.floor((seconds - Math.floor(seconds)) * 100 + 1e-9);
+            secEl.textContent = pad2(s);
+            msEl.textContent = pad2(cent);
+        }
+
+        function setStatus(type, text) {
+            statusPill.classList.remove('good', 'warn', 'bad');
+            if (type) statusPill.classList.add(type);
+            statusText.textContent = text;
+        }
+
+        function loop() {
+            if (!running) return;
             const now = performance.now();
-            const time = elapsed + (now - startTime) / 1000;
-
-            const s = Math.floor(time);
-            const c = Math.floor((time % 1) * 100);
-
-            sec.innerText = String(s).padStart(2, "0");
-            ms.innerText = String(c).padStart(2, "0");
-
-            raf = requestAnimationFrame(update);
+            const current = elapsed + (now - startAt) / 1000;
+            render(current);
+            rafId = requestAnimationFrame(loop);
         }
 
-        function showOverlay(type, title, sub) {
-            overlay.classList.remove("win", "mid", "lose", "show");
-            confetti.innerHTML = "";
+        // seconds aqui JÁ vem com 2 casas (travado)
+        function evaluateResult(seconds) {
+            const v = seconds;
 
-            overlay.classList.add(type);
-            overlayTitle.textContent = title;
-            overlaySub.textContent = sub;
-
-            // confetti só na vitória
-            if (type === "win") {
-                const pieces = 26;
-                for (let i = 0; i < pieces; i++) {
-                    const p = document.createElement("i");
-                    const left = Math.random() * 100;
-                    const delay = Math.random() * 120;
-                    const sizeW = 8 + Math.random() * 8;
-                    const sizeH = 10 + Math.random() * 10;
-                    const rot = Math.random() * 360;
-
-                    // cores castelão + branco + amarelo
-                    const palette = ["#dd6a1e", "#ff8c3a", "#0b3b5b", "#ffffff", "#ffb900"];
-                    const color = palette[Math.floor(Math.random() * palette.length)];
-
-                    p.style.left = left + "%";
-                    p.style.top = (-10 - Math.random() * 40) + "px";
-                    p.style.width = sizeW + "px";
-                    p.style.height = sizeH + "px";
-                    p.style.background = color;
-                    p.style.transform = `rotate(${rot}deg)`;
-                    p.style.animationDelay = delay + "ms";
-                    confetti.appendChild(p);
-                }
-                // vibração (quando tiver)
-                if (navigator.vibrate) navigator.vibrate([80, 60, 120]);
-            } else if (type === "mid") {
-                if (navigator.vibrate) navigator.vibrate([50, 40, 60]);
-            } else {
-                if (navigator.vibrate) navigator.vibrate(80);
-                // shake no cronômetro
-                timer.classList.remove("shake");
-                void timer.offsetWidth; // reflow
-                timer.classList.add("shake");
-                setTimeout(() => timer.classList.remove("shake"), 500);
+            if (v === TARGET) {
+                setStatus('good', `CRAVOU ${v.toFixed(2)} • prêmio TOP`);
+                return;
             }
 
-            overlay.classList.add("show");
+            if (v >= TOL_MIN && v <= TOL_MAX) {
+                setStatus('warn', `Parou em ${v.toFixed(2)} • prêmio menor`);
+                return;
+            }
 
-            // some sozinho depois de 1.2s (só o overlay; status continua)
-            setTimeout(() => overlay.classList.remove("show"), 1200);
+            setStatus('bad', `Parou em ${v.toFixed(2)} • tente de novo`);
         }
 
-        btn.onclick = () => {
-            if (!running) {
-                running = true;
-                startTime = performance.now();
-                btn.innerText = "PARAR";
-                btn.classList.add("stop");
-                status.innerText = "Valendo! tente parar em 10.00";
-                update();
-            } else {
-                running = false;
-                cancelAnimationFrame(raf);
+        // =========================
+        // AÇÕES
+        // =========================
+        function start() {
+            if (running) return;
 
-                elapsed += (performance.now() - startTime) / 1000;
+            running = true;
+            toggleBtn.textContent = 'PARAR';
+            toggleBtn.classList.add('stop');
 
-                const result = Math.round(elapsed * 100) / 100;
+            setStatus('', 'Valendo! Tenta cravar 10.00');
+            startAt = performance.now();
+            rafId = requestAnimationFrame(loop);
+        }
 
-                if (result === TARGET) {
-                    status.innerText = "CRAVOU 10.00 🎉 PRÊMIO TOP";
-                    showOverlay("win", "VOCÊ GANHOU!", "CRAVOU 10.00 • PRÊMIO TOP");
-                } else if (result >= TOL_MIN && result <= TOL_MAX) {
-                    status.innerText = "Parou em " + result.toFixed(2) + " • prêmio menor";
-                    showOverlay("mid", "QUASE LÁ!", "Parou em " + result.toFixed(2) + " • PRÊMIO MENOR");
-                } else {
-                    status.innerText = "Parou em " + result.toFixed(2) + " • tente novamente";
-                    showOverlay("lose", "NÃO FOI DESSA VEZ", "Parou em " + result.toFixed(2) + " • TENTA DE NOVO");
-                }
+        function stop() {
+            if (!running) return;
 
-                btn.innerText = "INICIAR";
-                btn.classList.remove("stop");
-            }
-        };
+            running = false;
+
+            const now = performance.now();
+            elapsed = elapsed + (now - startAt) / 1000;
+
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = null;
+
+            // ✅ TRAVA UM ÚNICO VALOR (2 casas) e usa em tudo
+            const final = Math.round(elapsed * 100) / 100;
+
+            elapsed = final;  // garante que o valor exibido é o mesmo armazenado
+            render(final);
+            evaluateResult(final);
+
+            toggleBtn.textContent = 'INICIAR';
+            toggleBtn.classList.remove('stop');
+        }
 
         function reset() {
             running = false;
-            cancelAnimationFrame(raf);
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = null;
+
             elapsed = 0;
-            sec.innerText = "00";
-            ms.innerText = "00";
-            btn.innerText = "INICIAR";
-            btn.classList.remove("stop");
-            status.innerText = "Toque em INICIAR para começar";
-            overlay.classList.remove("show", "win", "mid", "lose");
+            startAt = 0;
+
+            toggleBtn.textContent = 'INICIAR';
+            toggleBtn.classList.remove('stop');
+
+            render(0);
+            setStatus('', 'Toque em INICIAR para começar');
         }
 
-        function toggleFull() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen?.();
-            } else {
-                document.exitFullscreen?.();
-            }
-        }
+        // =========================
+        // EVENTOS
+        // =========================
+        toggleBtn.addEventListener('click', () => {
+            if (!running) start();
+            else stop();
+        });
+
+        resetBtn.addEventListener('click', reset);
+
+        // Tela cheia (quando permitido)
+        fullBtn.addEventListener('click', async () => {
+            try {
+                const root = document.documentElement;
+                if (!document.fullscreenElement) {
+                    await root.requestFullscreen?.();
+                    if (screen.orientation?.lock) {
+                        try { await screen.orientation.lock('portrait'); } catch (e) { }
+                    }
+                } else {
+                    await document.exitFullscreen?.();
+                }
+            } catch (e) { }
+        });
+
+        // Mantém display coerente em mudanças de barra do navegador
+        window.addEventListener('resize', () => {
+            const current = running
+                ? (elapsed + (performance.now() - startAt) / 1000)
+                : elapsed;
+            render(current);
+        });
 
         // init
         reset();
     </script>
-
 </body>
 
 </html>
