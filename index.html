@@ -18,7 +18,6 @@
             --muted: rgba(11, 42, 58, .62);
 
             --card: rgba(255, 255, 255, .92);
-            --card2: rgba(255, 255, 255, .78);
             --stroke: rgba(0, 0, 0, .06);
 
             --shadow: 0 18px 45px rgba(0, 0, 0, .18);
@@ -27,6 +26,13 @@
             --good: #00d978;
             --warn: #ffb900;
             --bad: #ff3b3b;
+
+            /* ✅ tamanhos do cronômetro (JS ajusta) */
+            --secSize: 120px;
+            --msSize: 82px;
+            --dotSize: 54px;
+            --dotGap: 12px;
+            --dotLift: -3px;
 
             --gap: 14px;
         }
@@ -43,7 +49,6 @@
         body {
             margin: 0;
             overflow: hidden;
-            /* sem rolagem */
             font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
             background:
                 radial-gradient(900px 700px at 20% 12%, rgba(255, 160, 60, .16), transparent 60%),
@@ -56,7 +61,6 @@
             touch-action: manipulation;
         }
 
-        /* ===== APP ===== */
         .app {
             height: 100svh;
             height: 100dvh;
@@ -156,30 +160,21 @@
             transform: scale(.98);
         }
 
-        /* ===== MAIN (PROPORCIONAL E SEM BURACOS) ===== */
+        /* ===== MAIN ===== */
         .main {
             min-height: 0;
             display: grid;
-            grid-template-rows:
-                auto
-                /* timer */
-                auto
-                /* status */
-                1fr
-                /* área do botão */
-                auto;
-            /* reset */
+            grid-template-rows: auto auto 1fr auto;
             gap: var(--gap);
             align-items: center;
             padding: 6px 0;
         }
 
-        /* Timer */
+        /* ===== TIMER ===== */
         .timerWrap {
             display: grid;
-            gap: 10px;
             justify-items: center;
-            min-height: 20vh;
+            gap: 10px;
         }
 
         .timer {
@@ -190,24 +185,25 @@
             letter-spacing: 1px;
             line-height: 1;
             text-shadow: 0 10px 25px rgba(0, 0, 0, .10);
-            position: relative;
         }
 
+        /* ✅ tamanhos controlados por variáveis (JS ajusta) */
         .timer .sec {
-            font-size: clamp(100px, 22vh, 240px);
+            font-size: var(--secSize);
         }
 
         .timer .dot {
-            font-size: clamp(50px, 8vh, 90px);
-            margin: 0 16px;
-            transform: translateY(-4px);
+            font-size: var(--dotSize);
+            margin: 0 var(--dotGap);
+            opacity: .9;
+            transform: translateY(var(--dotLift));
         }
 
         .timer .ms {
-            font-size: clamp(70px, 13vh, 160px);
+            font-size: var(--msSize);
+            opacity: .95;
         }
 
-        /* brilho sutil atrás do timer */
         .timerGlow {
             width: min(680px, 92%);
             height: 70px;
@@ -217,7 +213,7 @@
             opacity: .8;
         }
 
-        /* Status */
+        /* ===== STATUS ===== */
         .statusPill {
             justify-self: center;
             width: min(680px, 92%);
@@ -289,17 +285,16 @@
             box-shadow: 0 0 0 5px rgba(255, 60, 60, .18);
         }
 
-        /* Área do botão */
+        /* ===== BUTTON AREA ===== */
         .btnArea {
             min-height: 0;
             display: grid;
             place-items: center;
         }
 
-        /* Botão principal - proporcional ao mobile */
         .bigBtn {
-            width: clamp(180px, min(62vw, 30svh), 320px);
-            height: clamp(180px, min(62vw, 30svh), 320px);
+            width: clamp(170px, min(60vw, 30svh), 320px);
+            height: clamp(170px, min(60vw, 30svh), 320px);
 
             border-radius: 999px;
             border: 0;
@@ -349,7 +344,6 @@
                 linear-gradient(180deg, rgba(255, 47, 47, .86), rgba(205, 16, 16, .82));
         }
 
-        /* animação de vitória */
         .winPulse {
             animation: winPulse .65s ease-in-out 0s 3;
         }
@@ -368,7 +362,7 @@
             }
         }
 
-        /* Reset */
+        /* ===== RESET ===== */
         .resetBtn {
             justify-self: center;
             width: min(720px, 92%);
@@ -389,7 +383,7 @@
             filter: brightness(.98);
         }
 
-        /* Footer */
+        /* ===== FOOTER ===== */
         .footNote {
             text-align: center;
             font-size: 14px;
@@ -405,7 +399,6 @@
             margin: 0 10px;
         }
 
-        /* Telas baixas (refino) */
         @media (max-height: 740px) {
             :root {
                 --gap: 12px;
@@ -442,16 +435,8 @@
             }
 
             .bigBtn {
-                width: clamp(170px, min(58vw, 28svh), 290px);
-                height: clamp(170px, min(58vw, 28svh), 290px);
-            }
-
-            .timer .sec {
-                font-size: clamp(52px, 12.5vw, 118px);
-            }
-
-            .timer .ms {
-                font-size: clamp(32px, 8vw, 82px);
+                width: clamp(165px, min(56vw, 28svh), 290px);
+                height: clamp(165px, min(56vw, 28svh), 290px);
             }
         }
     </style>
@@ -459,9 +444,8 @@
 
 <body>
     <div class="app">
-        <header class="topbar">
+        <header class="topbar" id="topbar">
             <div class="brand">
-                <!-- Troque pela sua logo -->
                 <img class="brandLogo" src="img/logo.png" alt="Castelão" />
                 <div class="brandText">
                     <div class="title">DESAFIO 10.00s</div>
@@ -472,9 +456,9 @@
             <button class="fullBtn" id="fullBtn" type="button">Tela cheia</button>
         </header>
 
-        <main class="main">
-            <div class="timerWrap">
-                <div class="timer" aria-label="Cronômetro">
+        <main class="main" id="main">
+            <div class="timerWrap" id="timerWrap">
+                <div class="timer" id="timer" aria-label="Cronômetro">
                     <span class="sec" id="sec">00</span>
                     <span class="dot">.</span>
                     <span class="ms" id="ms">00</span>
@@ -487,14 +471,14 @@
                 <span class="statusText" id="statusText">Toque em INICIAR para começar</span>
             </div>
 
-            <div class="btnArea">
+            <div class="btnArea" id="btnArea">
                 <button class="bigBtn" id="toggleBtn" type="button">INICIAR</button>
             </div>
 
             <button class="resetBtn" id="resetBtn" type="button">REINICIAR</button>
         </main>
 
-        <footer class="footNote">
+        <footer class="footNote" id="footNote">
             Castelão <span class="sep">•</span> Desafio presencial <span class="sep">•</span> Dica: treine no link da
             bio
         </footer>
@@ -509,11 +493,18 @@
         // ======= ELEMENTOS =======
         const secEl = document.getElementById('sec');
         const msEl = document.getElementById('ms');
+
         const toggleBtn = document.getElementById('toggleBtn');
         const resetBtn = document.getElementById('resetBtn');
+
         const statusText = document.getElementById('statusText');
         const statusPill = document.getElementById('statusPill');
+
         const fullBtn = document.getElementById('fullBtn');
+
+        const topbar = document.getElementById('topbar');
+        const timerWrap = document.getElementById('timerWrap');
+        const btnArea = document.getElementById('btnArea');
 
         // ======= ESTADO =======
         let running = false;
@@ -535,12 +526,12 @@
             statusPill.classList.remove('good', 'warn', 'bad');
             if (type) statusPill.classList.add(type);
             statusText.textContent = text;
+            // status pode mudar altura (texto), então recalcula o timer
+            fitTimerToSpace();
         }
 
         function vibrate(ms) {
-            try {
-                if (navigator.vibrate) navigator.vibrate(ms);
-            } catch (e) { }
+            try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { }
         }
 
         function loop() {
@@ -551,7 +542,37 @@
             rafId = requestAnimationFrame(loop);
         }
 
-        // seconds já vem com 2 casas
+        // ======= ✅ AUTO-FIT DO CRONÔMETRO =======
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+        function fitTimerToSpace() {
+            // espaço vertical REAL entre o fim do header e o topo do status
+            const topbarRect = topbar.getBoundingClientRect();
+            const statusRect = statusPill.getBoundingClientRect();
+
+            // “zona” do cronômetro (onde o número deve crescer)
+            let available = (statusRect.top - topbarRect.bottom) - 18; // margem de segurança
+            // se por algum motivo der pequeno, evita quebrar
+            available = clamp(available, 140, 360);
+
+            // tamanhos em px baseados nessa altura disponível
+            // sec maior, ms menor, dot intermediário
+            const sec = clamp(Math.floor(available * 0.62), 82, 210);
+            const ms = clamp(Math.floor(available * 0.38), 52, 140);
+            const dot = clamp(Math.floor(available * 0.26), 34, 95);
+
+            // espaçamento e “lift” do ponto
+            const gap = clamp(Math.floor(available * 0.06), 10, 18);
+            const lift = -clamp(Math.floor(available * 0.03), 2, 6);
+
+            document.documentElement.style.setProperty('--secSize', sec + 'px');
+            document.documentElement.style.setProperty('--msSize', ms + 'px');
+            document.documentElement.style.setProperty('--dotSize', dot + 'px');
+            document.documentElement.style.setProperty('--dotGap', gap + 'px');
+            document.documentElement.style.setProperty('--dotLift', lift + 'px');
+        }
+
+        // ======= RESULTADO =======
         function evaluateResult(seconds) {
             const v = seconds;
 
@@ -573,6 +594,7 @@
             vibrate(30);
         }
 
+        // ======= AÇÕES =======
         function start() {
             if (running) return;
             running = true;
@@ -594,7 +616,7 @@
             if (rafId) cancelAnimationFrame(rafId);
             rafId = null;
 
-            // ✅ TRAVA UM ÚNICO VALOR FINAL (2 casas)
+            // trava um único valor final (2 casas)
             const final = Math.round(elapsed * 100) / 100;
             elapsed = final;
 
@@ -625,7 +647,7 @@
         toggleBtn.addEventListener('click', () => running ? stop() : start());
         resetBtn.addEventListener('click', reset);
 
-        // Fullscreen
+        // ======= FULLSCREEN =======
         fullBtn.addEventListener('click', async () => {
             try {
                 const root = document.documentElement;
@@ -640,8 +662,23 @@
             } catch (e) { }
         });
 
-        // init
+        // recalcula quando a tela muda (barra do navegador, etc.)
+        window.addEventListener('resize', () => {
+            const current = running
+                ? (elapsed + (performance.now() - startAt) / 1000)
+                : elapsed;
+            render(current);
+            fitTimerToSpace();
+        });
+
+        window.addEventListener('orientationchange', () => setTimeout(fitTimerToSpace, 80));
+
+        // INIT
         reset();
+        requestAnimationFrame(() => {
+            fitTimerToSpace();
+            setTimeout(fitTimerToSpace, 120);
+        });
     </script>
 </body>
 
