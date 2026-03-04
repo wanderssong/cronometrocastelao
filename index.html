@@ -8,27 +8,19 @@
 
     <style>
         :root {
-            --bg1: #0b1220;
-            --bg2: #0a1a2b;
-
-            --text: #0b2a3a;
-            --muted: rgba(11, 42, 58, .65);
-
-            --card: rgba(255, 255, 255, .92);
-            --card2: rgba(255, 255, 255, .72);
-            --stroke: rgba(0, 0, 0, .06);
-
-            --blueA: #0b4a63;
-            --blueB: #083b53;
+            --bgTop: #0b4a63;
+            --bgBot: #083b53;
 
             --orangeA: #ff9a2a;
             --orangeB: #e87512;
 
-            --shadow: 0 18px 45px rgba(0, 0, 0, .18);
+            --txt: #0b2a3a;
+            --muted: rgba(11, 42, 58, .62);
 
-            /* botão (JS ajusta) */
-            --btn: 260px;
-            --gap: 14px;
+            --card: rgba(255, 255, 255, .92);
+            --stroke: rgba(0, 0, 0, .06);
+
+            --shadow: 0 18px 45px rgba(0, 0, 0, .18);
         }
 
         * {
@@ -49,12 +41,13 @@
                 radial-gradient(900px 700px at 20% 15%, rgba(255, 160, 60, .14), transparent 60%),
                 radial-gradient(900px 700px at 85% 25%, rgba(60, 160, 255, .16), transparent 62%),
                 linear-gradient(180deg, #eef3f7, #dfe8ef);
+            color: var(--txt);
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             touch-action: manipulation;
-            color: var(--text);
         }
 
+        /* ===== APP ===== */
         .app {
             height: 100svh;
             height: 100dvh;
@@ -62,7 +55,7 @@
             grid-template-rows: auto 1fr auto;
             gap: 12px;
             padding: env(safe-area-inset-top) 14px env(safe-area-inset-bottom) 14px;
-            max-width: 820px;
+            max-width: 860px;
             margin: 0 auto;
         }
 
@@ -74,7 +67,7 @@
             gap: 12px;
             padding: 14px 14px;
             border-radius: 22px;
-            background: linear-gradient(180deg, var(--blueA), var(--blueB));
+            background: linear-gradient(180deg, var(--bgTop), var(--bgBot));
             box-shadow: var(--shadow);
             color: #fff;
         }
@@ -113,7 +106,7 @@
 
         .subtitle {
             margin-top: 6px;
-            font-size: 16px;
+            font-size: 15px;
             opacity: .92;
             line-height: 1.15;
             white-space: nowrap;
@@ -138,26 +131,18 @@
             transform: scale(.98);
         }
 
-        /* ===== MAIN (flex pra sobrar espaço pro botão) ===== */
+        /* ===== MAIN (GRID estável, sem space-between) ===== */
         .main {
             min-height: 0;
-            display: flex;
-            flex-direction: column;
-            gap: var(--gap);
+            display: grid;
+            grid-template-rows: auto auto 1fr auto;
+            /* timer / status / área do botão / reset */
+            gap: 14px;
             align-items: center;
-            justify-content: space-between;
-            /* distribui: topo (timerWrap) / meio (btn) / baixo (reset) */
             padding: 6px 0;
         }
 
-        /* Timer + status */
-        .timerWrap {
-            width: 100%;
-            display: grid;
-            gap: 14px;
-            justify-items: center;
-        }
-
+        /* Cronômetro */
         .timer {
             display: flex;
             align-items: baseline;
@@ -168,23 +153,24 @@
             text-shadow: 0 10px 25px rgba(0, 0, 0, .10);
         }
 
-        /* tamanho ajustado “bonito” (JS resolve o botão, então aqui pode ser estável) */
         .timer .sec {
-            font-size: clamp(64px, 14vw, 128px);
+            font-size: clamp(58px, 13.5vw, 124px);
         }
 
         .timer .dot {
-            font-size: clamp(26px, 6vw, 54px);
+            font-size: clamp(22px, 5.5vw, 52px);
             margin: 0 10px;
             opacity: .9;
         }
 
         .timer .ms {
-            font-size: clamp(40px, 9vw, 86px);
+            font-size: clamp(36px, 8.5vw, 84px);
             opacity: .95;
         }
 
+        /* Status */
         .statusPill {
+            justify-self: center;
             width: min(640px, 92%);
             padding: 14px 18px;
             border-radius: 999px;
@@ -236,17 +222,28 @@
             box-shadow: 0 0 0 5px rgba(255, 60, 60, .18);
         }
 
-        /* ===== BOTÃO PRINCIPAL (tamanho vem do JS via --btn) ===== */
+        /* Área do botão: centraliza sem “espaço fantasma” */
+        .btnArea {
+            display: grid;
+            place-items: center;
+            min-height: 0;
+        }
+
+        /* Botão principal: tamanho proporcional à ALTURA e LARGURA */
         .bigBtn {
-            width: var(--btn);
-            height: var(--btn);
+            /* ✅ regra: usa o menor entre largura e altura disponíveis */
+            width: clamp(170px, min(62vw, 30svh), 300px);
+            height: clamp(170px, min(62vw, 30svh), 300px);
+
             border-radius: 999px;
             border: 0;
             cursor: pointer;
+
             color: #fff;
             font-weight: 950;
             letter-spacing: 1px;
             font-size: clamp(18px, 4.8vw, 30px);
+
             display: grid;
             place-items: center;
 
@@ -272,13 +269,14 @@
                 linear-gradient(180deg, rgba(255, 47, 47, .82), rgba(215, 20, 20, .78));
         }
 
-        /* ===== RESET ===== */
+        /* Reset */
         .resetBtn {
+            justify-self: center;
             width: min(680px, 92%);
             padding: 18px 18px;
             border-radius: 22px;
             border: 0;
-            background: linear-gradient(180deg, var(--blueA), var(--blueB));
+            background: linear-gradient(180deg, var(--bgTop), var(--bgBot));
             color: #fff;
             font-weight: 950;
             letter-spacing: .7px;
@@ -290,7 +288,7 @@
             transform: scale(.99);
         }
 
-        /* ===== FOOTER ===== */
+        /* Footer */
         .footNote {
             text-align: center;
             font-size: 14px;
@@ -306,10 +304,10 @@
             margin: 0 10px;
         }
 
-        /* Ajustes rápidos p/ telas bem baixas (só refinam, não “quebram”) */
+        /* Telas baixas: comprime sem deformar */
         @media (max-height: 740px) {
-            :root {
-                --gap: 12px;
+            .app {
+                gap: 10px;
             }
 
             .topbar {
@@ -330,6 +328,10 @@
                 font-size: 14px;
             }
 
+            .main {
+                gap: 12px;
+            }
+
             .statusPill {
                 padding: 12px 14px;
             }
@@ -341,13 +343,18 @@
             .footNote {
                 font-size: 12px;
             }
+
+            .bigBtn {
+                width: clamp(160px, min(58vw, 28svh), 270px);
+                height: clamp(160px, min(58vw, 28svh), 270px);
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="app" id="app">
-        <header class="topbar" id="topbar">
+    <div class="app">
+        <header class="topbar">
             <div class="brand">
                 <!-- Troque pela sua logo -->
                 <img class="brandLogo" src="img/logo.png" alt="Castelão" />
@@ -360,26 +367,26 @@
             <button class="fullBtn" id="fullBtn" type="button">Tela cheia</button>
         </header>
 
-        <main class="main" id="main">
-            <div class="timerWrap" id="timerWrap">
-                <div class="timer" aria-label="Cronômetro">
-                    <span class="sec" id="sec">00</span>
-                    <span class="dot">.</span>
-                    <span class="ms" id="ms">00</span>
-                </div>
-
-                <div class="statusPill" id="statusPill">
-                    <span class="statusDot"></span>
-                    <span id="statusText">Toque em INICIAR para começar</span>
-                </div>
+        <main class="main">
+            <div class="timer" aria-label="Cronômetro">
+                <span class="sec" id="sec">00</span>
+                <span class="dot">.</span>
+                <span class="ms" id="ms">00</span>
             </div>
 
-            <button class="bigBtn" id="toggleBtn" type="button">INICIAR</button>
+            <div class="statusPill" id="statusPill">
+                <span class="statusDot"></span>
+                <span id="statusText">Toque em INICIAR para começar</span>
+            </div>
+
+            <div class="btnArea">
+                <button class="bigBtn" id="toggleBtn" type="button">INICIAR</button>
+            </div>
 
             <button class="resetBtn" id="resetBtn" type="button">REINICIAR</button>
         </main>
 
-        <footer class="footNote" id="footNote">
+        <footer class="footNote">
             Castelão <span class="sep">•</span> Desafio presencial <span class="sep">•</span> Dica: treine no link da
             bio
         </footer>
@@ -392,20 +399,12 @@
         const TOL_MAX = 10.05;
 
         // ======= ELEMENTOS =======
-        const app = document.getElementById('app');
-        const topbar = document.getElementById('topbar');
-        const main = document.getElementById('main');
-        const timerWrap = document.getElementById('timerWrap');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const footNote = document.getElementById('footNote');
-
         const secEl = document.getElementById('sec');
         const msEl = document.getElementById('ms');
-
+        const toggleBtn = document.getElementById('toggleBtn');
+        const resetBtn = document.getElementById('resetBtn');
         const statusText = document.getElementById('statusText');
         const statusPill = document.getElementById('statusPill');
-
         const fullBtn = document.getElementById('fullBtn');
 
         // ======= ESTADO =======
@@ -446,22 +445,18 @@
                 setStatus('good', `CRAVOU ${v.toFixed(2)}! 🎉 Prêmio TOP`);
                 return;
             }
-
             if (v >= TOL_MIN && v <= TOL_MAX) {
                 setStatus('warn', `Parou em ${v.toFixed(2)} • prêmio menor`);
                 return;
             }
-
             setStatus('bad', `Parou em ${v.toFixed(2)} • tente de novo`);
         }
 
         function start() {
             if (running) return;
             running = true;
-
             toggleBtn.textContent = 'PARAR';
             toggleBtn.classList.add('stop');
-
             setStatus('', 'Valendo! Tenta cravar 10.00');
             startAt = performance.now();
             rafId = requestAnimationFrame(loop);
@@ -477,10 +472,10 @@
             if (rafId) cancelAnimationFrame(rafId);
             rafId = null;
 
-            // ✅ trava um único valor final (2 casas) pra display e mensagem
+            // ✅ trava um único valor final (2 casas) pro display e mensagem
             const final = Math.round(elapsed * 100) / 100;
+            elapsed = final;
 
-            elapsed = final;     // mantém consistência se voltar a rodar
             render(final);
             evaluateResult(final);
 
@@ -506,7 +501,6 @@
         toggleBtn.addEventListener('click', () => running ? stop() : start());
         resetBtn.addEventListener('click', reset);
 
-        // ======= FULLSCREEN =======
         fullBtn.addEventListener('click', async () => {
             try {
                 const root = document.documentElement;
@@ -521,52 +515,7 @@
             } catch (e) { }
         });
 
-        // ======= AJUSTE REAL DO BOTÃO (NÃO QUEBRA OUTRAS PARTES) =======
-        function fitButton() {
-            // medidas reais
-            const mainRect = main.getBoundingClientRect();
-            const timerRect = timerWrap.getBoundingClientRect();
-            const resetRect = resetBtn.getBoundingClientRect();
-
-            // gaps: pega o --gap do CSS
-            const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gap')) || 14;
-
-            // espaço vertical livre dentro do main pro botão
-            // main contém: timerWrap + botão + reset (com gaps entre eles)
-            const freeH = mainRect.height - timerRect.height - resetRect.height - (gap * 2);
-
-            // limite pelo width (pra não ficar “gordinho” demais)
-            const maxByW = Math.min(mainRect.width * 0.78, 380);
-
-            // o diâmetro ideal: usa o que sobrou em altura, mas respeita width e mínimos
-            let size = Math.min(freeH, maxByW);
-
-            // limites seguros
-            size = Math.max(170, Math.min(size, 380));
-
-            // aplica
-            document.documentElement.style.setProperty('--btn', `${Math.floor(size)}px`);
-        }
-
-        // chama em momentos chave
-        window.addEventListener('resize', () => {
-            const current = running
-                ? (elapsed + (performance.now() - startAt) / 1000)
-                : elapsed;
-            render(current);
-            fitButton();
-        });
-
-        // alguns mobiles mudam a altura sem disparar resize consistente
-        window.addEventListener('orientationchange', () => setTimeout(fitButton, 60));
-
-        // init
         reset();
-        // espera layout assentar antes de medir
-        requestAnimationFrame(() => {
-            fitButton();
-            setTimeout(fitButton, 80);
-        });
     </script>
 </body>
 
