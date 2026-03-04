@@ -1,596 +1,545 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!doctype html>
+<html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Desafio 10s — Castelão</title>
+    <title>Castelão • Desafio 10.00s</title>
 
     <style>
         :root {
-            --bg1: #070A12;
-            --bg2: #0B1430;
-            --stroke: #ffffff14;
-            --text: #eaf0ff;
-            --shadow: 0 28px 80px rgba(0, 0, 0, .55);
-            --shadow2: 0 10px 30px rgba(0, 0, 0, .35);
-            --glass: blur(14px) saturate(145%);
-            --ok: #39ffb4;
-            --mid: #ffd166;
-            --bad: #ff3b6a;
+            /* Paleta Castelão (baseada na logo) */
+            --purple-1: #3A0B77;
+            --purple-2: #6A22D8;
+            --purple-3: #9A63FF;
+
+            --orange-1: #FF6A00;
+            --orange-2: #FF8A1A;
+
+            --bg: #05060B;
+            --text: rgba(255, 255, 255, .92);
+            --muted: rgba(255, 255, 255, .72);
+
+            --stroke: rgba(255, 255, 255, .14);
+            --stroke2: rgba(255, 255, 255, .10);
+
+            --shadow: 0 26px 60px rgba(0, 0, 0, .55);
         }
 
         * {
-            box-sizing: border-box
+            box-sizing: border-box;
         }
 
         html,
         body {
-            height: 100%
+            height: 100%;
         }
 
         body {
             margin: 0;
-            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
             color: var(--text);
-            background:
-                radial-gradient(1200px 900px at 20% 20%, rgba(255, 122, 24, .20), transparent 55%),
-                radial-gradient(1000px 800px at 80% 20%, rgba(88, 168, 255, .14), transparent 60%),
-                radial-gradient(900px 800px at 50% 95%, rgba(57, 255, 180, .10), transparent 55%),
-                linear-gradient(180deg, var(--bg1), var(--bg2));
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
             overflow: hidden;
-            user-select: none;
+            /* sem rolagem */
             -webkit-tap-highlight-color: transparent;
-        }
+            user-select: none;
+            touch-action: manipulation;
 
-        .wrap {
-            height: 100%;
-            display: grid;
-            place-items: center;
-            padding: 16px;
-        }
-
-        .card {
-            width: min(1200px, 100%);
-            height: min(820px, 100%);
-            border-radius: 34px;
-            border: 1px solid var(--stroke);
-            background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .03));
-            box-shadow: var(--shadow);
-            backdrop-filter: var(--glass);
-            -webkit-backdrop-filter: var(--glass);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: "";
-            position: absolute;
-            inset: -2px;
             background:
-                radial-gradient(740px 260px at 16% 0%, rgba(255, 122, 24, .20), transparent 60%),
-                radial-gradient(620px 260px at 86% 10%, rgba(88, 168, 255, .14), transparent 60%),
-                radial-gradient(640px 320px at 55% 120%, rgba(57, 255, 180, .12), transparent 60%);
-            filter: blur(18px);
-            opacity: .9;
-            pointer-events: none;
+                radial-gradient(900px 650px at 20% 15%, rgba(154, 99, 255, .22), transparent 62%),
+                radial-gradient(900px 650px at 80% 25%, rgba(255, 138, 26, .18), transparent 62%),
+                radial-gradient(1100px 900px at 50% 95%, rgba(106, 34, 216, .18), transparent 62%),
+                linear-gradient(180deg, #05060B, #060A14 55%, #05060B);
         }
 
-        /* HEADER fixo e por cima (não invade o centro) */
-        header {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            right: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .app {
+            height: 100svh;
+            height: 100dvh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            padding: env(safe-area-inset-top) 14px env(safe-area-inset-bottom) 14px;
             gap: 12px;
-            z-index: 10;
-            pointer-events: auto;
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 18px;
+
+            background:
+                linear-gradient(180deg, rgba(106, 34, 216, .18), rgba(0, 0, 0, .18));
+            border: 1px solid rgba(154, 99, 255, .22);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .38);
+            backdrop-filter: blur(10px);
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            border-radius: 22px;
-            border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(0, 0, 0, .18);
-            box-shadow: var(--shadow2);
-            max-width: min(620px, 70vw);
-        }
-
-        .logo {
-            width: 72px;
-            height: 72px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, .14);
-            background: rgba(255, 255, 255, .06);
-            display: grid;
-            place-items: center;
-            overflow: hidden;
-            box-shadow: 0 14px 26px rgba(0, 0, 0, .35);
-            flex: 0 0 auto;
-        }
-
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 10px;
-            filter: drop-shadow(0 10px 12px rgba(0, 0, 0, .35));
-        }
-
-        .miniTitle {
-            line-height: 1.15;
+            gap: 10px;
             min-width: 0;
         }
 
-        .miniTitle b {
-            font-size: 14px;
-            letter-spacing: .4px;
+        .brandLogo {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            object-fit: contain;
+            background:
+                radial-gradient(30px 30px at 30% 25%, rgba(255, 255, 255, .16), transparent 55%),
+                linear-gradient(180deg, rgba(255, 138, 26, .20), rgba(106, 34, 216, .18));
+            border: 1px solid rgba(255, 138, 26, .20);
+            box-shadow:
+                0 14px 26px rgba(0, 0, 0, .40),
+                inset 0 0 0 1px rgba(0, 0, 0, .22);
+            padding: 6px;
+            flex: 0 0 auto;
+        }
+
+        .brandText {
+            min-width: 0;
+            line-height: 1.1;
+        }
+
+        .title {
             font-weight: 950;
-            display: block;
+            font-size: 14px;
+            letter-spacing: .6px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .miniTitle span {
-            display: block;
+        .subtitle {
             margin-top: 4px;
             font-size: 12px;
-            font-weight: 900;
-            color: rgba(234, 240, 255, .75);
+            color: var(--muted);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .topBtns {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .miniBtn {
-            appearance: none;
-            border: none;
-            cursor: pointer;
-            padding: 11px 12px;
+        .fullBtn {
+            flex: 0 0 auto;
+            padding: 10px 12px;
             border-radius: 16px;
-            font-weight: 950;
-            color: rgba(234, 240, 255, .92);
-            background: rgba(0, 0, 0, .18);
-            border: 1px solid rgba(255, 255, 255, .12);
-            box-shadow: var(--shadow2);
-        }
-
-        .miniBtn:active {
-            transform: translateY(2px)
-        }
-
-        /* CENTRO: padding-top reservado para o header (não sobrepõe cronômetro) */
-        .center {
-            height: 100%;
-            display: grid;
-            place-items: center;
-            padding: 160px 18px 34px 18px;
-            /* <-- AQUI é a correção */
-        }
-
-        .timerCard {
-            width: min(980px, 100%);
-            border-radius: 36px;
-            padding: 42px 22px 28px 22px;
-            /* mais respiro */
-            border: 1px solid rgba(255, 255, 255, .12);
-            background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .02));
-            box-shadow: 0 24px 65px rgba(0, 0, 0, .50);
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        .timerCard::after {
-            content: "";
-            position: absolute;
-            inset: -45%;
-            background: conic-gradient(from 180deg,
-                    rgba(255, 122, 24, .0),
-                    rgba(255, 122, 24, .18),
-                    rgba(88, 168, 255, .14),
-                    rgba(57, 255, 180, .12),
-                    rgba(255, 122, 24, .0));
-            animation: spinGlow 6.5s linear infinite;
-            filter: blur(28px);
-            opacity: .70;
-            pointer-events: none;
-        }
-
-        @keyframes spinGlow {
-            to {
-                transform: rotate(360deg)
-            }
-        }
-
-        /* Cronômetro com margem extra para nunca encostar em cima */
-        .digits {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            gap: 14px;
-            font-variant-numeric: tabular-nums;
-            text-shadow: 0 18px 50px rgba(0, 0, 0, .55);
-            margin-top: 6px;
-        }
-
-        .main {
-            font-size: clamp(96px, 12vw, 178px);
-            font-weight: 1000;
-            letter-spacing: 2px;
-        }
-
-        .ms {
-            font-size: clamp(34px, 5.0vw, 58px);
-            font-weight: 950;
-            color: rgba(234, 240, 255, .90);
-        }
-
-        .status {
-            position: relative;
-            z-index: 2;
-            margin: 18px auto 0 auto;
-            width: min(720px, 100%);
-            padding: 12px 14px;
-            border-radius: 22px;
-            border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(0, 0, 0, .14);
-            box-shadow: var(--shadow2);
-            font-weight: 950;
-            color: rgba(234, 240, 255, .92);
+            border: 1px solid rgba(255, 138, 26, .22);
+            background:
+                linear-gradient(180deg, rgba(255, 138, 26, .16), rgba(0, 0, 0, .18));
+            color: var(--text);
+            font-weight: 900;
+            letter-spacing: .2px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            min-height: 46px;
+            gap: 8px;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, .35);
         }
 
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 99px;
-            background: rgba(255, 255, 255, .35);
-            box-shadow: 0 0 0 7px rgba(255, 255, 255, .08);
+        .fullBtn:active {
+            transform: scale(.98);
         }
 
-        .status.topPrize .dot {
-            background: var(--ok);
-            box-shadow: 0 0 0 7px rgba(57, 255, 180, .12);
-        }
-
-        .status.midPrize .dot {
-            background: var(--mid);
-            box-shadow: 0 0 0 7px rgba(255, 209, 102, .12);
-        }
-
-        .status.lose .dot {
-            background: var(--bad);
-            box-shadow: 0 0 0 7px rgba(255, 59, 106, .12);
-        }
-
-        .status.topPrize {
-            border-color: rgba(57, 255, 180, .22);
-        }
-
-        .status.midPrize {
-            border-color: rgba(255, 209, 102, .22);
-        }
-
-        .status.lose {
-            border-color: rgba(255, 59, 106, .22);
-        }
-
-        .actions {
-            position: relative;
-            z-index: 2;
-            margin-top: 26px;
+        /* Main */
+        .main {
+            min-height: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 14px;
         }
 
-        .mainBtn {
-            width: min(320px, 74vw);
+        .timer {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            line-height: 1;
+            font-weight: 980;
+            letter-spacing: 1px;
+            text-shadow: 0 14px 44px rgba(0, 0, 0, .70);
+
+            /* brilho roxo/laranja no texto */
+            filter: drop-shadow(0 0 22px rgba(154, 99, 255, .18));
+        }
+
+        .timer .sec {
+            font-size: clamp(70px, 10vw, 150px);
+        }
+
+        .timer .dot {
+            font-size: clamp(26px, 4vw, 54px);
+            margin: 0 10px;
+            opacity: .95;
+            color: rgba(255, 255, 255, .88);
+        }
+
+        .timer .ms {
+            font-size: clamp(40px, 6vw, 96px);
+            opacity: .98;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        /* Status pill “Castelão” */
+        .statusPill {
+            width: min(780px, 92%);
+            padding: 12px 14px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 950;
+            text-align: center;
+
+            border: 1px solid rgba(154, 99, 255, .22);
+            background:
+                linear-gradient(90deg, rgba(255, 138, 26, .10), rgba(106, 34, 216, .14));
+            box-shadow: 0 14px 26px rgba(0, 0, 0, .35);
+        }
+
+        .statusDot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .65);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .08);
+            flex: 0 0 auto;
+        }
+
+        .statusPill.good {
+            border-color: rgba(0, 255, 140, .30);
+            background: linear-gradient(90deg, rgba(0, 255, 140, .12), rgba(106, 34, 216, .12));
+        }
+
+        .statusPill.good .statusDot {
+            background: #00ff8a;
+            box-shadow: 0 0 0 3px rgba(0, 255, 140, .18);
+        }
+
+        .statusPill.warn {
+            border-color: rgba(255, 185, 0, .34);
+            background: linear-gradient(90deg, rgba(255, 185, 0, .14), rgba(255, 138, 26, .10));
+        }
+
+        .statusPill.warn .statusDot {
+            background: #ffb900;
+            box-shadow: 0 0 0 3px rgba(255, 185, 0, .18);
+        }
+
+        .statusPill.bad {
+            border-color: rgba(255, 60, 60, .34);
+            background: linear-gradient(90deg, rgba(255, 60, 60, .14), rgba(106, 34, 216, .10));
+        }
+
+        .statusPill.bad .statusDot {
+            background: #ff3b3b;
+            box-shadow: 0 0 0 3px rgba(255, 60, 60, .18);
+        }
+
+        /* Botão principal “castelo” */
+        .bigBtn {
+            width: min(520px, 86%);
+            max-width: clamp(240px, 42vw, 380px);
             aspect-ratio: 1 / 1;
             border-radius: 999px;
-            border: 2px solid rgba(255, 255, 255, .18);
+            border: 2px solid rgba(255, 138, 26, .18);
+
+            background:
+                radial-gradient(520px 420px at 35% 28%, rgba(255, 255, 255, .16), transparent 55%),
+                radial-gradient(520px 420px at 70% 78%, rgba(0, 0, 0, .35), transparent 55%),
+                linear-gradient(180deg, rgba(154, 99, 255, .32), rgba(58, 11, 119, .55));
+
             color: #fff;
-            font-weight: 1000;
-            letter-spacing: .6px;
-            font-size: clamp(18px, 2.6vw, 24px);
-            cursor: pointer;
+            font-weight: 980;
+            letter-spacing: 1px;
+            font-size: clamp(18px, 3.5vw, 30px);
+
             display: grid;
             place-items: center;
-            text-transform: uppercase;
-            transition: transform .12s ease, filter .12s ease;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
+            position: relative;
+            box-shadow: var(--shadow);
+            transform: translateZ(0);
         }
 
-        .mainBtn:active {
-            transform: translateY(3px) scale(.98);
-        }
-
-        .mainBtn.start {
-            background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, .22), transparent 42%),
-                radial-gradient(circle at 70% 80%, rgba(0, 0, 0, .25), transparent 55%),
-                linear-gradient(180deg, rgba(88, 168, 255, 1), rgba(30, 90, 160, 1));
-            box-shadow: 0 24px 60px rgba(0, 0, 0, .55), 0 0 0 12px rgba(88, 168, 255, .10);
-        }
-
-        .mainBtn.stop {
-            background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, .25), transparent 42%),
-                radial-gradient(circle at 70% 80%, rgba(0, 0, 0, .25), transparent 55%),
-                linear-gradient(180deg, rgba(255, 59, 106, 1), rgba(178, 15, 62, 1));
-            box-shadow: 0 24px 60px rgba(0, 0, 0, .55), 0 0 0 12px rgba(255, 59, 106, .10);
-        }
-
-        .smallBtn {
-            appearance: none;
-            border: none;
-            cursor: pointer;
-            padding: 14px 18px;
-            border-radius: 18px;
-            font-weight: 950;
-            letter-spacing: .2px;
-            color: rgba(234, 240, 255, .92);
-            background: rgba(0, 0, 0, .18);
-            border: 1px solid rgba(255, 255, 255, .12);
-            box-shadow: var(--shadow2);
-            min-width: min(340px, 78vw);
-        }
-
-        .smallBtn:active {
-            transform: translateY(2px)
-        }
-
-        .pulseNear {
-            animation: nearPulse .22s ease-in-out infinite;
-        }
-
-        @keyframes nearPulse {
-
-            0%,
-            100% {
-                transform: translateY(0)
-            }
-
-            50% {
-                transform: translateY(-2px)
-            }
-        }
-
-        .foot {
+        .bigBtn::before {
+            /* aro interno “glow” */
+            content: "";
             position: absolute;
-            bottom: 12px;
-            left: 16px;
-            right: 16px;
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            flex-wrap: wrap;
-            color: rgba(234, 240, 255, .62);
+            inset: 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            box-shadow:
+                inset 0 0 0 1px rgba(0, 0, 0, .25),
+                0 0 22px rgba(154, 99, 255, .10);
+            pointer-events: none;
+        }
+
+        .bigBtn:active {
+            transform: scale(.985);
+        }
+
+        .bigBtn.stop {
+            border-color: rgba(255, 60, 60, .22);
+            background:
+                radial-gradient(520px 420px at 35% 28%, rgba(255, 255, 255, .14), transparent 55%),
+                radial-gradient(520px 420px at 70% 78%, rgba(0, 0, 0, .38), transparent 55%),
+                linear-gradient(180deg, rgba(255, 60, 60, .34), rgba(106, 34, 216, .32));
+        }
+
+        .resetBtn {
+            width: min(520px, 86%);
+            padding: 13px 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(154, 99, 255, .20);
+            background: rgba(255, 255, 255, .06);
+            color: var(--text);
+            font-weight: 950;
+            letter-spacing: .6px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, .30);
+        }
+
+        .resetBtn:active {
+            transform: scale(.99);
+        }
+
+        .footNote {
+            text-align: center;
             font-size: 12px;
-            font-weight: 900;
-            z-index: 10;
+            color: var(--muted);
+            padding: 4px 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        @media (max-height: 680px) {
-            .center {
-                padding-top: 140px;
+        .sep {
+            opacity: .5;
+            margin: 0 6px;
+        }
+
+        @media (max-height: 720px) {
+            .app {
+                gap: 10px;
             }
 
-            .logo {
-                width: 64px;
-                height: 64px
+            .topbar {
+                padding: 8px 10px;
             }
 
-            .mainBtn {
-                width: min(280px, 70vw)
+            .statusPill {
+                padding: 10px 12px;
+            }
+
+            .main {
+                gap: 10px;
+            }
+
+            .resetBtn {
+                padding: 12px 14px;
             }
         }
 
-        @media (max-width: 720px) {
-            .brand {
-                max-width: 64vw;
+        @media (max-width: 520px) {
+            .brandLogo {
+                width: 46px;
+                height: 46px;
+                border-radius: 15px;
+            }
+
+            .fullBtn {
+                padding: 9px 10px;
+                border-radius: 14px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="wrap">
-        <div class="card">
-
-            <header>
-                <div class="brand">
-                    <div class="logo">
-                        <img src="img/logo.png" alt="Logo Castelão"
-                            onerror="this.style.display='none'; this.parentNode.innerHTML='🏪';" />
-                    </div>
-                    <div class="miniTitle">
-                        <b>DESAFIO 10.00s</b>
-                        <span>10.00 = prêmio TOP • 9.95–10.05 = prêmio menor</span>
-                    </div>
-                </div>
-
-                <div class="topBtns">
-                    <button class="miniBtn" id="btnFull" type="button">⛶ Tela cheia</button>
-                </div>
-            </header>
-
-            <div class="center">
-                <div class="timerCard" id="timerCard">
-                    <div class="digits" aria-live="polite">
-                        <div class="main" id="sec">00</div>
-                        <div class="ms" id="ms">.00</div>
-                    </div>
-
-                    <div class="status" id="status">
-                        <span class="dot"></span>
-                        <span id="msg">Toque em INICIAR.</span>
-                    </div>
-
-                    <div class="actions">
-                        <button class="mainBtn start" id="btnMain" type="button">INICIAR</button>
-                        <button class="smallBtn" id="btnReset" type="button">↻ REINICIAR</button>
-                        <button class="smallBtn" id="btnZero" type="button">⏹ ZERAR</button>
-                    </div>
+    <div class="app">
+        <header class="topbar">
+            <div class="brand">
+                <!-- ✅ sua logo -->
+                <img class="brandLogo" src="img/logo.png" alt="Castelão" />
+                <div class="brandText">
+                    <div class="title">DESAFIO 10.00s</div>
+                    <div class="subtitle">10.00 = prêmio TOP • 9.95–10.05 = prêmio menor</div>
                 </div>
             </div>
 
-            <div class="foot">
-                <div>Castelão • Desafio presencial</div>
-                <div style="opacity:.85">Dica: treine no link da bio</div>
+            <button class="fullBtn" id="fullBtn" type="button" aria-label="Tela cheia">⛶ Tela cheia</button>
+        </header>
+
+        <main class="main">
+            <div class="timer" aria-label="Cronômetro">
+                <span class="sec" id="sec">00</span>
+                <span class="dot">.</span>
+                <span class="ms" id="ms">00</span>
             </div>
 
-        </div>
+            <div class="statusPill" id="statusPill">
+                <span class="statusDot"></span>
+                <span id="statusText">Toque em INICIAR para começar</span>
+            </div>
+
+            <button class="bigBtn" id="toggleBtn" type="button">INICIAR</button>
+            <button class="resetBtn" id="resetBtn" type="button">REINICIAR</button>
+        </main>
+
+        <footer class="footNote">
+            Castelão • Desafio presencial <span class="sep">•</span> Dica: treine no link da bio
+        </footer>
     </div>
 
     <script>
-        const TOP = 10.00;
-        const MINOR_MIN = 9.95;
-        const MINOR_MAX = 10.05;
+        // ======= CONFIG DO DESAFIO =======
+        const TARGET = 10.00;
+        const TOL_MIN = 9.95;
+        const TOL_MAX = 10.05;
 
+        // ======= ELEMENTOS =======
+        const secEl = document.getElementById('sec');
+        const msEl = document.getElementById('ms');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const statusText = document.getElementById('statusText');
+        const statusPill = document.getElementById('statusPill');
+        const fullBtn = document.getElementById('fullBtn');
+
+        // ======= ESTADO =======
         let running = false;
-        let startTs = 0;
-        let raf = 0;
-        let lastT = 0;
+        let rafId = null;
+        let startAt = 0;
+        let elapsed = 0; // sempre guardado arredondado quando PARA
 
-        const secEl = document.getElementById("sec");
-        const msEl = document.getElementById("ms");
-        const timerCard = document.getElementById("timerCard");
+        // ======= HELPERS =======
+        function pad2(n) { return String(n).padStart(2, '0'); }
 
-        const btnMain = document.getElementById("btnMain");
-        const btnReset = document.getElementById("btnReset");
-        const btnZero = document.getElementById("btnZero");
-        const btnFull = document.getElementById("btnFull");
-
-        const statusEl = document.getElementById("status");
-        const msgEl = document.getElementById("msg");
-
-        const pad2 = (n) => String(n).padStart(2, "0");
-
-        function formatDisplay(t) {
-            const cs = Math.round(t * 100);
-            const s = Math.floor(cs / 100);
-            const c = cs % 100;
-            const str = `${pad2(Math.min(s, 99))}.${pad2(c)}`;
-            return { str, value: cs / 100 };
+        function round2(n) {
+            // ✅ arredondamento consistente (tela = resultado)
+            return Math.round((n + Number.EPSILON) * 100) / 100;
         }
 
-        function setStatus(kind, text) {
-            statusEl.classList.remove("topPrize", "midPrize", "lose");
-            if (kind) statusEl.classList.add(kind);
-            msgEl.textContent = text;
+        function formatTime(seconds) {
+            // SS.CC
+            const s = Math.floor(seconds) % 60;
+            const cent = Math.round((seconds - Math.floor(seconds)) * 100);
+            return { s: pad2(s), c: pad2(Math.max(0, Math.min(99, cent))) };
         }
 
-        function tick() {
+        function setStatus(type, text) {
+            statusPill.classList.remove('good', 'warn', 'bad');
+            if (type) statusPill.classList.add(type);
+            statusText.textContent = text;
+        }
+
+        function render(seconds) {
+            const t = formatTime(seconds);
+            secEl.textContent = t.s;
+            msEl.textContent = t.c;
+        }
+
+        function evaluateResult(rounded) {
+            const txt = rounded.toFixed(2);
+
+            if (rounded === TARGET) {
+                setStatus('good', `CRAVOU ${txt}! 🎉 Prêmio TOP`);
+                return;
+            }
+            if (rounded >= TOL_MIN && rounded <= TOL_MAX) {
+                setStatus('warn', `Parou em ${txt} • Prêmio menor`);
+                return;
+            }
+            setStatus('bad', `Parou em ${txt} • Tente de novo`);
+        }
+
+        function loop() {
+            if (!running) return;
+
             const now = performance.now();
-            const t = (now - startTs) / 1000;
-            lastT = t;
+            const raw = elapsed + (now - startAt) / 1000;
 
-            const disp = formatDisplay(t);
-            secEl.textContent = disp.str.slice(0, 2);
-            msEl.textContent = disp.str.slice(2);
+            // ✅ renderiza usando o mesmo arredondamento do resultado
+            const rounded = round2(raw);
+            render(rounded);
 
-            const diff = Math.abs(10 - t);
-            if (diff <= 0.22) timerCard.classList.add("pulseNear");
-            else timerCard.classList.remove("pulseNear");
-
-            raf = requestAnimationFrame(tick);
+            rafId = requestAnimationFrame(loop);
         }
 
         function start() {
+            if (running) return;
             running = true;
-            startTs = performance.now();
-            btnMain.textContent = "PARAR";
-            btnMain.classList.remove("start");
-            btnMain.classList.add("stop");
-            setStatus("", "Valendo!");
-            timerCard.classList.remove("pulseNear");
-            raf = requestAnimationFrame(tick);
+
+            toggleBtn.textContent = 'PARAR';
+            toggleBtn.classList.add('stop');
+
+            setStatus('', 'Valendo! Tenta cravar 10.00');
+            startAt = performance.now();
+            rafId = requestAnimationFrame(loop);
         }
 
         function stop() {
+            if (!running) return;
             running = false;
-            cancelAnimationFrame(raf);
-            timerCard.classList.remove("pulseNear");
 
-            const disp = formatDisplay(lastT);
-            const isTop = (disp.value === TOP);
-            const isMinor = (disp.value >= MINOR_MIN && disp.value <= MINOR_MAX);
+            const now = performance.now();
+            const raw = elapsed + (now - startAt) / 1000;
 
-            if (isTop) {
-                setStatus("topPrize", "CRAVOU 10.00! Prêmio TOP 🎉");
-            } else if (isMinor) {
-                setStatus("midPrize", `Quase perfeito: ${disp.str} • Prêmio menor ✅`);
-            } else {
-                setStatus("lose", `Parou em ${disp.str}`);
-            }
+            // ✅ congela UM valor e usa ele pra tudo
+            elapsed = round2(raw);
 
-            btnMain.textContent = "INICIAR";
-            btnMain.classList.remove("stop");
-            btnMain.classList.add("start");
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = null;
+
+            toggleBtn.textContent = 'INICIAR';
+            toggleBtn.classList.remove('stop');
+
+            render(elapsed);
+            evaluateResult(elapsed);
         }
 
         function reset() {
             running = false;
-            cancelAnimationFrame(raf);
-            lastT = 0;
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = null;
 
-            secEl.textContent = "00";
-            msEl.textContent = ".00";
+            elapsed = 0;
+            startAt = 0;
 
-            btnMain.textContent = "INICIAR";
-            btnMain.classList.remove("stop");
-            btnMain.classList.add("start");
+            toggleBtn.textContent = 'INICIAR';
+            toggleBtn.classList.remove('stop');
 
-            setStatus("", "Toque em INICIAR.");
-            timerCard.classList.remove("pulseNear");
+            render(0);
+            setStatus('', 'Toque em INICIAR para começar');
         }
 
-        function zero() {
-            running = false;
-            cancelAnimationFrame(raf);
-            lastT = 0;
+        toggleBtn.addEventListener('click', () => running ? stop() : start());
+        resetBtn.addEventListener('click', reset);
 
-            secEl.textContent = "00";
-            msEl.textContent = ".00";
-            timerCard.classList.remove("pulseNear");
-
-            btnMain.textContent = "INICIAR";
-            btnMain.classList.remove("stop");
-            btnMain.classList.add("start");
-        }
-
-        btnMain.addEventListener("click", () => { running ? stop() : start(); });
-        btnReset.addEventListener("click", reset);
-        btnZero.addEventListener("click", zero);
-
-        btnFull.addEventListener("click", async () => {
+        fullBtn.addEventListener('click', async () => {
             try {
-                if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
-                else await document.exitFullscreen();
+                const root = document.documentElement;
+                if (!document.fullscreenElement) {
+                    await root.requestFullscreen?.();
+                    if (screen.orientation && screen.orientation.lock) {
+                        try { await screen.orientation.lock('portrait'); } catch (e) { }
+                    }
+                } else {
+                    await document.exitFullscreen?.();
+                }
             } catch (e) { }
+        });
+
+        window.addEventListener('resize', () => {
+            const current = running
+                ? round2(elapsed + (performance.now() - startAt) / 1000)
+                : elapsed;
+            render(current);
         });
 
         reset();
