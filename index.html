@@ -131,14 +131,18 @@
             transform: scale(.98);
         }
 
-        /* ===== MAIN (GRID estável, sem space-between) ===== */
+        /* ===== MAIN ===== */
         .main {
             min-height: 0;
             display: grid;
             grid-template-rows: auto auto 1fr auto;
             /* timer / status / área do botão / reset */
             gap: 14px;
-            align-items: center;
+
+            /* ✅ AQUI É A MUDANÇA: remove o "center" que cria o efeito desproporcional */
+            align-items: start;
+            justify-items: center;
+
             padding: 6px 0;
         }
 
@@ -170,7 +174,6 @@
 
         /* Status */
         .statusPill {
-            justify-self: center;
             width: min(640px, 92%);
             padding: 14px 18px;
             border-radius: 999px;
@@ -222,16 +225,19 @@
             box-shadow: 0 0 0 5px rgba(255, 60, 60, .18);
         }
 
-        /* Área do botão: centraliza sem “espaço fantasma” */
+        /* Área do botão */
         .btnArea {
-            display: grid;
-            place-items: center;
+            width: 100%;
             min-height: 0;
+
+            /* ✅ AQUI É A MUDANÇA: prende o botão logo abaixo do status */
+            display: grid;
+            place-items: start center;
+            padding-top: 6px;
         }
 
-        /* Botão principal: tamanho proporcional à ALTURA e LARGURA */
+        /* Botão principal */
         .bigBtn {
-            /* ✅ regra: usa o menor entre largura e altura disponíveis */
             width: clamp(170px, min(62vw, 30svh), 300px);
             height: clamp(170px, min(62vw, 30svh), 300px);
 
@@ -271,7 +277,6 @@
 
         /* Reset */
         .resetBtn {
-            justify-self: center;
             width: min(680px, 92%);
             padding: 18px 18px;
             border-radius: 22px;
@@ -304,7 +309,6 @@
             margin: 0 10px;
         }
 
-        /* Telas baixas: comprime sem deformar */
         @media (max-height: 740px) {
             .app {
                 gap: 10px;
@@ -356,7 +360,6 @@
     <div class="app">
         <header class="topbar">
             <div class="brand">
-                <!-- Troque pela sua logo -->
                 <img class="brandLogo" src="img/logo.png" alt="Castelão" />
                 <div class="brandText">
                     <div class="title">DESAFIO 10.00s</div>
@@ -393,12 +396,10 @@
     </div>
 
     <script>
-        // ======= CONFIG DO DESAFIO =======
         const TARGET = 10.00;
         const TOL_MIN = 9.95;
         const TOL_MAX = 10.05;
 
-        // ======= ELEMENTOS =======
         const secEl = document.getElementById('sec');
         const msEl = document.getElementById('ms');
         const toggleBtn = document.getElementById('toggleBtn');
@@ -407,13 +408,11 @@
         const statusPill = document.getElementById('statusPill');
         const fullBtn = document.getElementById('fullBtn');
 
-        // ======= ESTADO =======
         let running = false;
         let rafId = null;
         let startAt = 0;
         let elapsed = 0;
 
-        // ======= HELPERS =======
         function pad2(n) { return String(n).padStart(2, '0'); }
 
         function render(seconds) {
@@ -437,7 +436,6 @@
             rafId = requestAnimationFrame(loop);
         }
 
-        // seconds já vem com 2 casas
         function evaluateResult(seconds) {
             const v = seconds;
 
@@ -472,7 +470,6 @@
             if (rafId) cancelAnimationFrame(rafId);
             rafId = null;
 
-            // ✅ trava um único valor final (2 casas) pro display e mensagem
             const final = Math.round(elapsed * 100) / 100;
             elapsed = final;
 
