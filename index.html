@@ -1,26 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <title>Desafio 10.00s — Castelão</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Desafio 10s — Castelão</title>
+
     <style>
         :root {
             --bg1: #070A12;
             --bg2: #0B1430;
             --stroke: #ffffff14;
             --text: #eaf0ff;
-            --muted: #a9b3d1;
-            --ok: #39ffb4;
-            --bad: #ff4d6d;
-            --warn: #ffd166;
-            --accent: #ff7a18;
-            --accent2: #1fb6ff;
             --shadow: 0 28px 80px rgba(0, 0, 0, .55);
             --shadow2: 0 10px 30px rgba(0, 0, 0, .35);
             --glass: blur(14px) saturate(145%);
-            --r: 34px;
+            --ok: #39ffb4;
+            --mid: #ffd166;
+            --bad: #ff3b6a;
         }
 
         * {
@@ -37,53 +34,26 @@
             font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
             color: var(--text);
             background:
-                radial-gradient(1300px 900px at 20% 20%, rgba(255, 122, 24, .22), transparent 55%),
-                radial-gradient(1100px 800px at 80% 20%, rgba(31, 182, 255, .18), transparent 60%),
-                radial-gradient(1000px 800px at 50% 95%, rgba(57, 255, 180, .12), transparent 55%),
+                radial-gradient(1200px 900px at 20% 20%, rgba(255, 122, 24, .20), transparent 55%),
+                radial-gradient(1000px 800px at 80% 20%, rgba(88, 168, 255, .14), transparent 60%),
+                radial-gradient(900px 800px at 50% 95%, rgba(57, 255, 180, .10), transparent 55%),
                 linear-gradient(180deg, var(--bg1), var(--bg2));
             overflow: hidden;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        .noise {
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
-            mix-blend-mode: overlay;
-            opacity: .20;
-            pointer-events: none;
-        }
-
-        .grid3d {
-            position: fixed;
-            inset: -25%;
-            background:
-                linear-gradient(transparent 0 96%, rgba(255, 255, 255, .06) 96% 100%),
-                linear-gradient(90deg, transparent 0 96%, rgba(255, 255, 255, .06) 96% 100%);
-            background-size: 86px 86px, 86px 86px;
-            transform: perspective(950px) rotateX(62deg) translateY(-18%);
-            opacity: .14;
-            pointer-events: none;
-        }
-
         .wrap {
             height: 100%;
             display: grid;
             place-items: center;
-            padding: 18px;
-        }
-
-        .stage {
-            width: min(1100px, 100%);
-            height: min(720px, 100%);
-            position: relative;
-            transform-style: preserve-3d;
+            padding: 16px;
         }
 
         .card {
-            height: 100%;
-            border-radius: var(--r);
+            width: min(1200px, 100%);
+            height: min(820px, 100%);
+            border-radius: 34px;
             border: 1px solid var(--stroke);
             background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .03));
             box-shadow: var(--shadow);
@@ -91,9 +61,6 @@
             -webkit-backdrop-filter: var(--glass);
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
-            /* FIXO: sem tilt dinâmico */
-            transform: none !important;
         }
 
         .card::before {
@@ -101,15 +68,15 @@
             position: absolute;
             inset: -2px;
             background:
-                radial-gradient(740px 260px at 16% 0%, rgba(255, 122, 24, .28), transparent 60%),
-                radial-gradient(620px 260px at 86% 10%, rgba(31, 182, 255, .22), transparent 60%),
-                radial-gradient(640px 320px at 55% 120%, rgba(57, 255, 180, .18), transparent 60%);
+                radial-gradient(740px 260px at 16% 0%, rgba(255, 122, 24, .20), transparent 60%),
+                radial-gradient(620px 260px at 86% 10%, rgba(88, 168, 255, .14), transparent 60%),
+                radial-gradient(640px 320px at 55% 120%, rgba(57, 255, 180, .12), transparent 60%);
             filter: blur(18px);
             opacity: .9;
             pointer-events: none;
-            transform: translateZ(-1px);
         }
 
+        /* HEADER fixo e por cima (não invade o centro) */
         header {
             position: absolute;
             top: 16px;
@@ -120,6 +87,7 @@
             align-items: center;
             gap: 12px;
             z-index: 10;
+            pointer-events: auto;
         }
 
         .brand {
@@ -131,46 +99,54 @@
             border: 1px solid rgba(255, 255, 255, .12);
             background: rgba(0, 0, 0, .18);
             box-shadow: var(--shadow2);
-            transform: perspective(900px) rotateX(8deg);
+            max-width: min(620px, 70vw);
         }
 
         .logo {
-            width: 54px;
-            height: 54px;
-            border-radius: 18px;
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, .14);
             background: rgba(255, 255, 255, .06);
             display: grid;
             place-items: center;
             overflow: hidden;
             box-shadow: 0 14px 26px rgba(0, 0, 0, .35);
-            transform: perspective(650px) rotateX(10deg) rotateY(-10deg);
+            flex: 0 0 auto;
         }
 
         .logo img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            padding: 8px;
+            padding: 10px;
             filter: drop-shadow(0 10px 12px rgba(0, 0, 0, .35));
         }
 
-        .tbox {
-            line-height: 1.05;
+        .miniTitle {
+            line-height: 1.15;
+            min-width: 0;
         }
 
-        .tbox .t {
-            font-weight: 950;
-            letter-spacing: .4px;
+        .miniTitle b {
             font-size: 14px;
-            color: rgba(234, 240, 255, .92);
+            letter-spacing: .4px;
+            font-weight: 950;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .tbox .s {
-            margin-top: 3px;
-            font-weight: 900;
+        .miniTitle span {
+            display: block;
+            margin-top: 4px;
             font-size: 12px;
-            color: var(--muted);
+            font-weight: 900;
+            color: rgba(234, 240, 255, .75);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .topBtns {
@@ -180,98 +156,43 @@
             justify-content: flex-end;
         }
 
-        .btn {
+        .miniBtn {
             appearance: none;
             border: none;
             cursor: pointer;
-            padding: 12px 14px;
-            border-radius: 18px;
+            padding: 11px 12px;
+            border-radius: 16px;
             font-weight: 950;
-            letter-spacing: .2px;
-            color: var(--text);
+            color: rgba(234, 240, 255, .92);
             background: rgba(0, 0, 0, .18);
             border: 1px solid rgba(255, 255, 255, .12);
             box-shadow: var(--shadow2);
-            transform: perspective(900px) rotateX(8deg);
-            transition: transform .15s ease, filter .15s ease;
-            position: relative;
-            overflow: hidden;
         }
 
-        .btn:hover {
-            filter: brightness(1.08)
+        .miniBtn:active {
+            transform: translateY(2px)
         }
 
-        .btn:active {
-            transform: perspective(900px) rotateX(3deg) translateY(2px)
-        }
-
-        .btn.primary {
-            background: linear-gradient(135deg, rgba(255, 122, 24, .95), rgba(255, 55, 98, .55));
-            border: 1px solid rgba(255, 122, 24, .35);
-        }
-
-        .btn.secondary {
-            background: linear-gradient(135deg, rgba(31, 182, 255, .70), rgba(57, 255, 180, .35));
-            border: 1px solid rgba(31, 182, 255, .34);
-        }
-
-        .btn[disabled] {
-            opacity: .55;
-            cursor: not-allowed;
-            filter: saturate(.6)
-        }
-
-        .shine {
-            position: absolute;
-            top: -45%;
-            left: -70%;
-            width: 60%;
-            height: 190%;
-            transform: rotate(18deg);
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .22), transparent);
-            opacity: .55;
-            animation: shine 2.9s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes shine {
-            0% {
-                transform: translateX(-30%) rotate(18deg);
-                opacity: 0
-            }
-
-            25% {
-                opacity: .55
-            }
-
-            60% {
-                opacity: .55
-            }
-
-            100% {
-                transform: translateX(340%) rotate(18deg);
-                opacity: 0
-            }
-        }
-
+        /* CENTRO: padding-top reservado para o header (não sobrepõe cronômetro) */
         .center {
             height: 100%;
             display: grid;
             place-items: center;
-            padding: 92px 18px 22px 18px;
+            padding: 160px 18px 34px 18px;
+            /* <-- AQUI é a correção */
         }
 
         .timerCard {
             width: min(980px, 100%);
-            border-radius: 34px;
-            padding: 28px 20px;
+            border-radius: 36px;
+            padding: 42px 22px 28px 22px;
+            /* mais respiro */
             border: 1px solid rgba(255, 255, 255, .12);
             background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .02));
             box-shadow: 0 24px 65px rgba(0, 0, 0, .50);
-            transform: perspective(1200px) rotateX(10deg);
             position: relative;
             overflow: hidden;
+            text-align: center;
         }
 
         .timerCard::after {
@@ -280,12 +201,12 @@
             inset: -45%;
             background: conic-gradient(from 180deg,
                     rgba(255, 122, 24, .0),
-                    rgba(255, 122, 24, .22),
-                    rgba(31, 182, 255, .20),
-                    rgba(57, 255, 180, .18),
+                    rgba(255, 122, 24, .18),
+                    rgba(88, 168, 255, .14),
+                    rgba(57, 255, 180, .12),
                     rgba(255, 122, 24, .0));
-            animation: spinGlow 5.9s linear infinite;
-            filter: blur(24px);
+            animation: spinGlow 6.5s linear infinite;
+            filter: blur(28px);
             opacity: .70;
             pointer-events: none;
         }
@@ -296,126 +217,149 @@
             }
         }
 
+        /* Cronômetro com margem extra para nunca encostar em cima */
         .digits {
             position: relative;
             z-index: 2;
             display: flex;
             align-items: baseline;
             justify-content: center;
-            gap: 12px;
+            gap: 14px;
             font-variant-numeric: tabular-nums;
             text-shadow: 0 18px 50px rgba(0, 0, 0, .55);
+            margin-top: 6px;
         }
 
         .main {
-            font-size: clamp(78px, 10.5vw, 140px);
+            font-size: clamp(96px, 12vw, 178px);
             font-weight: 1000;
             letter-spacing: 2px;
         }
 
         .ms {
-            font-size: clamp(28px, 4.2vw, 46px);
+            font-size: clamp(34px, 5.0vw, 58px);
             font-weight: 950;
             color: rgba(234, 240, 255, .90);
         }
 
-        .subline {
+        .status {
             position: relative;
             z-index: 2;
-            margin-top: 14px;
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .pill {
-            padding: 10px 14px;
-            border-radius: 999px;
+            margin: 18px auto 0 auto;
+            width: min(720px, 100%);
+            padding: 12px 14px;
+            border-radius: 22px;
             border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(0, 0, 0, .18);
-            font-weight: 950;
+            background: rgba(0, 0, 0, .14);
             box-shadow: var(--shadow2);
+            font-weight: 950;
+            color: rgba(234, 240, 255, .92);
             display: flex;
-            gap: 10px;
             align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 46px;
         }
 
         .dot {
             width: 10px;
             height: 10px;
             border-radius: 99px;
-            background: var(--warn);
+            background: rgba(255, 255, 255, .35);
+            box-shadow: 0 0 0 7px rgba(255, 255, 255, .08);
+        }
+
+        .status.topPrize .dot {
+            background: var(--ok);
+            box-shadow: 0 0 0 7px rgba(57, 255, 180, .12);
+        }
+
+        .status.midPrize .dot {
+            background: var(--mid);
             box-shadow: 0 0 0 7px rgba(255, 209, 102, .12);
         }
 
-        .hint {
-            color: rgba(234, 240, 255, .88);
-            font-weight: 900;
-            letter-spacing: .2px;
+        .status.lose .dot {
+            background: var(--bad);
+            box-shadow: 0 0 0 7px rgba(255, 59, 106, .12);
         }
 
-        .status {
-            margin-top: 14px;
-            padding: 12px 14px;
-            border-radius: 22px;
-            border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(0, 0, 0, .16);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 2;
-            box-shadow: var(--shadow2);
+        .status.topPrize {
+            border-color: rgba(57, 255, 180, .22);
         }
 
-        .tag {
-            padding: 7px 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, .14);
-            background: rgba(0, 0, 0, .18);
-            font-size: 12px;
-            font-weight: 1000;
-            letter-spacing: .3px;
+        .status.midPrize {
+            border-color: rgba(255, 209, 102, .22);
         }
 
-        .tag.ok {
-            color: var(--ok);
-            border-color: rgba(57, 255, 180, .35)
-        }
-
-        .tag.bad {
-            color: var(--bad);
-            border-color: rgba(255, 77, 109, .35)
-        }
-
-        .tag.wait {
-            color: var(--warn);
-            border-color: rgba(255, 209, 102, .35)
-        }
-
-        .msg {
-            font-size: 12px;
-            font-weight: 950;
-            color: rgba(234, 240, 255, .92);
+        .status.lose {
+            border-color: rgba(255, 59, 106, .22);
         }
 
         .actions {
-            margin-top: 18px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
             position: relative;
             z-index: 2;
+            margin-top: 26px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
         }
 
-        @media (max-width:520px) {
-            .actions {
-                grid-template-columns: 1fr
-            }
+        .mainBtn {
+            width: min(320px, 74vw);
+            aspect-ratio: 1 / 1;
+            border-radius: 999px;
+            border: 2px solid rgba(255, 255, 255, .18);
+            color: #fff;
+            font-weight: 1000;
+            letter-spacing: .6px;
+            font-size: clamp(18px, 2.6vw, 24px);
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            text-transform: uppercase;
+            transition: transform .12s ease, filter .12s ease;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
+        }
+
+        .mainBtn:active {
+            transform: translateY(3px) scale(.98);
+        }
+
+        .mainBtn.start {
+            background:
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, .22), transparent 42%),
+                radial-gradient(circle at 70% 80%, rgba(0, 0, 0, .25), transparent 55%),
+                linear-gradient(180deg, rgba(88, 168, 255, 1), rgba(30, 90, 160, 1));
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .55), 0 0 0 12px rgba(88, 168, 255, .10);
+        }
+
+        .mainBtn.stop {
+            background:
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, .25), transparent 42%),
+                radial-gradient(circle at 70% 80%, rgba(0, 0, 0, .25), transparent 55%),
+                linear-gradient(180deg, rgba(255, 59, 106, 1), rgba(178, 15, 62, 1));
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .55), 0 0 0 12px rgba(255, 59, 106, .10);
+        }
+
+        .smallBtn {
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            padding: 14px 18px;
+            border-radius: 18px;
+            font-weight: 950;
+            letter-spacing: .2px;
+            color: rgba(234, 240, 255, .92);
+            background: rgba(0, 0, 0, .18);
+            border: 1px solid rgba(255, 255, 255, .12);
+            box-shadow: var(--shadow2);
+            min-width: min(340px, 78vw);
+        }
+
+        .smallBtn:active {
+            transform: translateY(2px)
         }
 
         .pulseNear {
@@ -426,240 +370,137 @@
 
             0%,
             100% {
-                transform: perspective(1200px) rotateX(10deg) translateY(0)
+                transform: translateY(0)
             }
 
             50% {
-                transform: perspective(1200px) rotateX(11deg) translateY(-2px)
-            }
-        }
-
-        .confetti {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 999;
-            display: none;
-        }
-
-        .confetti.show {
-            display: block
-        }
-
-        .confetti i {
-            position: absolute;
-            top: -12vh;
-            width: 10px;
-            height: 16px;
-            border-radius: 2px;
-            opacity: .92;
-            transform: translate3d(0, 0, 0) rotate(0deg);
-            animation: fall linear forwards;
-            filter: drop-shadow(0 10px 10px rgba(0, 0, 0, .25));
-        }
-
-        @keyframes fall {
-            to {
-                transform: translate3d(var(--dx), 125vh, 0) rotate(var(--rot));
+                transform: translateY(-2px)
             }
         }
 
         .foot {
             position: absolute;
-            bottom: 14px;
+            bottom: 12px;
             left: 16px;
             right: 16px;
             display: flex;
             justify-content: space-between;
             gap: 10px;
             flex-wrap: wrap;
-            color: rgba(234, 240, 255, .70);
+            color: rgba(234, 240, 255, .62);
             font-size: 12px;
             font-weight: 900;
             z-index: 10;
         }
 
-        .kbd {
-            padding: 6px 8px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, .14);
-            background: rgba(0, 0, 0, .18);
-            color: rgba(234, 240, 255, .85);
-            font-weight: 1000;
+        @media (max-height: 680px) {
+            .center {
+                padding-top: 140px;
+            }
+
+            .logo {
+                width: 64px;
+                height: 64px
+            }
+
+            .mainBtn {
+                width: min(280px, 70vw)
+            }
+        }
+
+        @media (max-width: 720px) {
+            .brand {
+                max-width: 64vw;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="grid3d"></div>
-    <div class="noise"></div>
-    <div class="confetti" id="confetti"></div>
-
     <div class="wrap">
-        <div class="stage">
-            <div class="card" id="tiltCard">
-                <header>
-                    <div class="brand">
-                        <div class="logo" aria-hidden="true">
-                            <img src="img/logo.png" alt="Logo Castelão"
-                                onerror="this.style.display='none'; this.parentNode.innerHTML='🏪';" />
-                        </div>
-                        <div class="tbox">
-                            <div class="t">DESAFIO 10.00s</div>
-                            <div class="s">Só ganha se cravar <b>10.00</b> no display.</div>
-                        </div>
+        <div class="card">
+
+            <header>
+                <div class="brand">
+                    <div class="logo">
+                        <img src="img/logo.png" alt="Logo Castelão"
+                            onerror="this.style.display='none'; this.parentNode.innerHTML='🏪';" />
                     </div>
-
-                    <div class="topBtns">
-                        <button class="btn" id="btnFull" type="button">⛶ Tela cheia<span class="shine"
-                                aria-hidden="true"></span></button>
-                        <button class="btn" id="btnReset" type="button">↻ Nova rodada<span class="shine"
-                                aria-hidden="true"></span></button>
-                    </div>
-                </header>
-
-                <div class="center">
-                    <div class="timerCard" id="timerCard">
-                        <div class="digits" aria-live="polite">
-                            <div class="main" id="sec">00</div>
-                            <div class="ms" id="ms">.00</div>
-                        </div>
-
-                        <div class="subline">
-                            <div class="pill">
-                                <span class="dot" id="dot"></span>
-                                <span class="hint" id="hint">Toque em <b>INICIAR</b> e depois em <b>PARAR</b>.</span>
-                            </div>
-                            <div class="pill">
-                                <span style="color:var(--muted); font-weight:1000">Tentativa:</span>
-                                <span id="tries" style="font-weight:1000">0</span>/<span id="triesMax"
-                                    style="font-weight:1000">1</span>
-                            </div>
-                        </div>
-
-                        <div class="status" id="status">
-                            <div class="tag wait" id="tag">AGUARDANDO</div>
-                            <div class="msg" id="msg">Pronto para começar.</div>
-                        </div>
-
-                        <div class="actions">
-                            <button class="btn primary" id="btnStart" type="button">▶ INICIAR<span class="shine"
-                                    aria-hidden="true"></span></button>
-                            <button class="btn secondary" id="btnStop" type="button" disabled>⏸ PARAR<span class="shine"
-                                    aria-hidden="true"></span></button>
-                        </div>
+                    <div class="miniTitle">
+                        <b>DESAFIO 10.00s</b>
+                        <span>10.00 = prêmio TOP • 9.95–10.05 = prêmio menor</span>
                     </div>
                 </div>
 
-                <div class="foot">
-                    <div>Atalho: <span class="kbd">Espaço</span> iniciar/parar • <span class="kbd">R</span> nova rodada
+                <div class="topBtns">
+                    <button class="miniBtn" id="btnFull" type="button">⛶ Tela cheia</button>
+                </div>
+            </header>
+
+            <div class="center">
+                <div class="timerCard" id="timerCard">
+                    <div class="digits" aria-live="polite">
+                        <div class="main" id="sec">00</div>
+                        <div class="ms" id="ms">.00</div>
                     </div>
-                    <div style="opacity:.85">Castelão • Desafio presencial</div>
+
+                    <div class="status" id="status">
+                        <span class="dot"></span>
+                        <span id="msg">Toque em INICIAR.</span>
+                    </div>
+
+                    <div class="actions">
+                        <button class="mainBtn start" id="btnMain" type="button">INICIAR</button>
+                        <button class="smallBtn" id="btnReset" type="button">↻ REINICIAR</button>
+                        <button class="smallBtn" id="btnZero" type="button">⏹ ZERAR</button>
+                    </div>
                 </div>
             </div>
+
+            <div class="foot">
+                <div>Castelão • Desafio presencial</div>
+                <div style="opacity:.85">Dica: treine no link da bio</div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        const TARGET_DISPLAY = "10.00";
-        const MAX_TRIES = 1;
+        const TOP = 10.00;
+        const MINOR_MIN = 9.95;
+        const MINOR_MAX = 10.05;
 
         let running = false;
         let startTs = 0;
         let raf = 0;
-        let tries = 0;
         let lastT = 0;
 
         const secEl = document.getElementById("sec");
         const msEl = document.getElementById("ms");
         const timerCard = document.getElementById("timerCard");
-        const dot = document.getElementById("dot");
 
-        const btnStart = document.getElementById("btnStart");
-        const btnStop = document.getElementById("btnStop");
+        const btnMain = document.getElementById("btnMain");
         const btnReset = document.getElementById("btnReset");
+        const btnZero = document.getElementById("btnZero");
         const btnFull = document.getElementById("btnFull");
 
-        const triesEl = document.getElementById("tries");
-        const triesMaxEl = document.getElementById("triesMax");
-        const tagEl = document.getElementById("tag");
+        const statusEl = document.getElementById("status");
         const msgEl = document.getElementById("msg");
 
-        const confetti = document.getElementById("confetti");
-        triesMaxEl.textContent = String(MAX_TRIES);
-
-        let audioCtx = null;
-        function beep(freq = 880, dur = 0.06, type = "sine", gain = 0.06) {
-            try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const o = audioCtx.createOscillator();
-                const g = audioCtx.createGain();
-                o.type = type;
-                o.frequency.value = freq;
-                g.gain.value = gain;
-                o.connect(g); g.connect(audioCtx.destination);
-                o.start();
-                o.stop(audioCtx.currentTime + dur);
-            } catch (e) { }
-        }
-        function winSound() {
-            beep(523, .08, "triangle", .07);
-            setTimeout(() => beep(659, .08, "triangle", .07), 90);
-            setTimeout(() => beep(784, .12, "triangle", .08), 180);
-        }
-        function failSound() {
-            beep(220, .08, "sawtooth", .05);
-            setTimeout(() => beep(180, .12, "sawtooth", .05), 90);
-        }
-
         const pad2 = (n) => String(n).padStart(2, "0");
+
         function formatDisplay(t) {
-            const cs = Math.round(t * 100); // arredondado (sem “facilitar”)
+            const cs = Math.round(t * 100);
             const s = Math.floor(cs / 100);
             const c = cs % 100;
-            return `${pad2(Math.min(s, 99))}.${pad2(c)}`;
+            const str = `${pad2(Math.min(s, 99))}.${pad2(c)}`;
+            return { str, value: cs / 100 };
         }
 
         function setStatus(kind, text) {
-            if (kind === "ok") {
-                tagEl.className = "tag ok";
-                tagEl.textContent = "CRAVOU! 🎉";
-                msgEl.textContent = text || "Parabéns! Entregue o prêmio.";
-            } else if (kind === "bad") {
-                tagEl.className = "tag bad";
-                tagEl.textContent = "NÃO FOI 😅";
-                msgEl.textContent = text || "Quase… nova rodada.";
-            } else {
-                tagEl.className = "tag wait";
-                tagEl.textContent = "AGUARDANDO";
-                msgEl.textContent = text || "Pronto para começar.";
-            }
-        }
-
-        function updateTries() {
-            triesEl.textContent = String(tries);
-            btnStart.disabled = running || (tries >= MAX_TRIES);
-        }
-
-        function burstConfetti() {
-            confetti.innerHTML = "";
-            confetti.classList.add("show");
-
-            const pieces = 140;
-            const w = window.innerWidth;
-            const colors = ["#ff7a18", "#1fb6ff", "#39ffb4", "#ffd166", "#ff4d6d", "#b8c0ff"];
-
-            for (let i = 0; i < pieces; i++) {
-                const el = document.createElement("i");
-                el.style.left = (Math.random() * w) + "px";
-                el.style.setProperty("--dx", ((Math.random() * 2 - 1) * 220) + "px");
-                el.style.setProperty("--rot", (Math.random() * 720 - 360) + "deg");
-                el.style.animationDuration = (Math.random() * 1.1 + 1.6).toFixed(2) + "s";
-                el.style.background = colors[Math.floor(Math.random() * colors.length)];
-                confetti.appendChild(el);
-            }
-            setTimeout(() => confetti.classList.remove("show"), 2400);
+            statusEl.classList.remove("topPrize", "midPrize", "lose");
+            if (kind) statusEl.classList.add(kind);
+            msgEl.textContent = text;
         }
 
         function tick() {
@@ -668,120 +509,91 @@
             lastT = t;
 
             const disp = formatDisplay(t);
-            secEl.textContent = disp.slice(0, 2);
-            msEl.textContent = disp.slice(2);
+            secEl.textContent = disp.str.slice(0, 2);
+            msEl.textContent = disp.str.slice(2);
 
-            // feedback só perto de 10s
             const diff = Math.abs(10 - t);
-            if (diff <= 0.22) {
-                timerCard.classList.add("pulseNear");
-                dot.style.background = "var(--warn)";
-                dot.style.boxShadow = "0 0 0 7px rgba(255,209,102,.14)";
-            } else {
-                timerCard.classList.remove("pulseNear");
-                dot.style.background = "var(--warn)";
-                dot.style.boxShadow = "0 0 0 7px rgba(255,209,102,.12)";
-            }
+            if (diff <= 0.22) timerCard.classList.add("pulseNear");
+            else timerCard.classList.remove("pulseNear");
 
             raf = requestAnimationFrame(tick);
         }
 
         function start() {
-            if (running) return;
-            if (tries >= MAX_TRIES) return;
-
             running = true;
             startTs = performance.now();
-            btnStart.disabled = true;
-            btnStop.disabled = false;
-
-            setStatus("wait", "Valendo! Só ganha se parar em 10.00.");
-            beep(740, .06, "square", .05);
-
+            btnMain.textContent = "PARAR";
+            btnMain.classList.remove("start");
+            btnMain.classList.add("stop");
+            setStatus("", "Valendo!");
+            timerCard.classList.remove("pulseNear");
             raf = requestAnimationFrame(tick);
         }
 
         function stop() {
-            if (!running) return;
-
             running = false;
             cancelAnimationFrame(raf);
-            btnStop.disabled = true;
-
-            tries++;
-            updateTries();
+            timerCard.classList.remove("pulseNear");
 
             const disp = formatDisplay(lastT);
-            const win = (disp === TARGET_DISPLAY);
+            const isTop = (disp.value === TOP);
+            const isMinor = (disp.value >= MINOR_MIN && disp.value <= MINOR_MAX);
 
-            if (win) {
-                setStatus("ok", "CRAVOU 10.00! Vitória.");
-                winSound();
-                burstConfetti();
-                dot.style.background = "var(--ok)";
-                dot.style.boxShadow = "0 0 0 7px rgba(57,255,180,.16)";
-                timerCard.style.outline = "2px solid rgba(57,255,180,.45)";
+            if (isTop) {
+                setStatus("topPrize", "CRAVOU 10.00! Prêmio TOP 🎉");
+            } else if (isMinor) {
+                setStatus("midPrize", `Quase perfeito: ${disp.str} • Prêmio menor ✅`);
             } else {
-                setStatus("bad", `Parou em ${disp}. Precisa cravar 10.00.`);
-                failSound();
-                dot.style.background = "var(--bad)";
-                dot.style.boxShadow = "0 0 0 7px rgba(255,77,109,.14)";
-                timerCard.style.outline = "2px solid rgba(255,77,109,.38)";
+                setStatus("lose", `Parou em ${disp.str}`);
             }
 
-            setTimeout(() => { timerCard.style.outline = "none"; }, 700);
-            timerCard.classList.remove("pulseNear");
+            btnMain.textContent = "INICIAR";
+            btnMain.classList.remove("stop");
+            btnMain.classList.add("start");
         }
 
-        function resetRound() {
+        function reset() {
             running = false;
             cancelAnimationFrame(raf);
-
-            tries = 0;
             lastT = 0;
 
             secEl.textContent = "00";
             msEl.textContent = ".00";
 
-            btnStop.disabled = true;
-            btnStart.disabled = false;
+            btnMain.textContent = "INICIAR";
+            btnMain.classList.remove("stop");
+            btnMain.classList.add("start");
 
-            dot.style.background = "var(--warn)";
-            dot.style.boxShadow = "0 0 0 7px rgba(255,209,102,.12)";
-
+            setStatus("", "Toque em INICIAR.");
             timerCard.classList.remove("pulseNear");
-            setStatus("wait", "Pronto para começar.");
-            updateTries();
-            beep(520, .05, "sine", .04);
         }
 
-        btnStart.addEventListener("click", start);
-        btnStop.addEventListener("click", stop);
-        btnReset.addEventListener("click", resetRound);
+        function zero() {
+            running = false;
+            cancelAnimationFrame(raf);
+            lastT = 0;
 
-        window.addEventListener("keydown", (e) => {
-            if (e.code === "Space") {
-                e.preventDefault();
-                running ? stop() : start();
-            }
-            if (e.key.toLowerCase() === "r") {
-                resetRound();
-            }
-        });
+            secEl.textContent = "00";
+            msEl.textContent = ".00";
+            timerCard.classList.remove("pulseNear");
+
+            btnMain.textContent = "INICIAR";
+            btnMain.classList.remove("stop");
+            btnMain.classList.add("start");
+        }
+
+        btnMain.addEventListener("click", () => { running ? stop() : start(); });
+        btnReset.addEventListener("click", reset);
+        btnZero.addEventListener("click", zero);
 
         btnFull.addEventListener("click", async () => {
             try {
-                if (!document.fullscreenElement) {
-                    await document.documentElement.requestFullscreen();
-                    btnFull.childNodes[0].textContent = "⛶ Sair tela cheia";
-                } else {
-                    await document.exitFullscreen();
-                    btnFull.childNodes[0].textContent = "⛶ Tela cheia";
-                }
+                if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+                else await document.exitFullscreen();
             } catch (e) { }
         });
 
-        resetRound();
+        reset();
     </script>
 </body>
 
