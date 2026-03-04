@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafio 10 segundos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Desafio Castelão</title>
 
     <style>
         * {
@@ -20,12 +20,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(180deg, #120c1f, #0a0715);
-            color: white;
+            background: linear-gradient(180deg, #f4f7fb, #e6edf4);
+            color: #0b3b5b;
         }
 
         /* CONTAINER */
-
         .container {
             width: 100%;
             max-width: 600px;
@@ -33,19 +32,20 @@
             display: grid;
             grid-template-rows: auto 1fr auto;
             padding: 12px;
-            gap: 10px;
+            gap: 12px;
+            position: relative;
         }
 
         /* HEADER */
-
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 12px;
+            padding: 12px 14px;
             border-radius: 16px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(8px);
+            background: linear-gradient(135deg, #0b3b5b, #145f88);
+            color: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         .logoArea {
@@ -55,9 +55,11 @@
         }
 
         .logo {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 10px;
+            background: white;
+            padding: 4px;
         }
 
         .title {
@@ -67,7 +69,7 @@
 
         .subtitle {
             font-size: 12px;
-            opacity: 0.7;
+            opacity: .9;
         }
 
         .full {
@@ -75,75 +77,103 @@
             padding: 8px 12px;
             border-radius: 12px;
             border: none;
-            background: rgba(255, 255, 255, 0.08);
+            background: #dd6a1e;
             color: white;
+            font-weight: bold;
         }
 
         /* MAIN */
-
         .main {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 14px;
+            gap: 18px;
         }
 
         /* TIMER */
-
         .timer {
             display: flex;
             align-items: flex-end;
             font-weight: bold;
+            color: #0b3b5b;
+            transition: transform .2s ease;
+        }
+
+        .timer.shake {
+            animation: shake .45s ease;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-8px);
+            }
+
+            40% {
+                transform: translateX(8px);
+            }
+
+            60% {
+                transform: translateX(-6px);
+            }
+
+            80% {
+                transform: translateX(6px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
         }
 
         .timer .sec {
-            font-size: clamp(60px, 13vw, 110px);
+            font-size: clamp(70px, 13vw, 110px);
         }
 
         .timer .dot {
-            font-size: clamp(22px, 5vw, 40px);
-            margin: 0 5px;
+            font-size: clamp(26px, 5vw, 40px);
+            margin: 0 6px;
         }
 
         .timer .ms {
-            font-size: clamp(36px, 8vw, 70px);
+            font-size: clamp(40px, 8vw, 70px);
         }
 
         /* STATUS */
-
         .status {
-            padding: 10px 16px;
+            padding: 12px 18px;
             border-radius: 30px;
-            background: rgba(255, 255, 255, 0.08);
+            background: white;
             font-weight: bold;
             font-size: 14px;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
         }
 
         /* BOTÃO */
-
         .bigButton {
-
-            --size: clamp(200px, 34svh, 300px);
-
+            --size: clamp(220px, 34svh, 300px);
             width: var(--size);
             height: var(--size);
-
             border-radius: 50%;
             border: none;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
-            font-size: clamp(20px, 5vw, 28px);
+            font-size: clamp(22px, 5vw, 30px);
             font-weight: bold;
+            color: white;
+            background: linear-gradient(180deg, #ff8c3a, #dd6a1e);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3), inset 0 4px 8px rgba(255, 255, 255, 0.4);
+            transition: .15s;
+            position: relative;
+        }
 
-            background: linear-gradient(180deg, #4a3d77, #2a2148);
-
-            box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.6),
-                inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+        .bigButton:active {
+            transform: scale(.96);
         }
 
         .bigButton.stop {
@@ -151,51 +181,201 @@
         }
 
         /* RESET */
-
         .reset {
             padding: 14px;
             border: none;
             border-radius: 14px;
-            background: rgba(255, 255, 255, 0.08);
+            background: #0b3b5b;
+            color: white;
             width: 100%;
             font-weight: bold;
         }
 
         /* FOOTER */
-
         .footer {
             text-align: center;
             font-size: 12px;
-            opacity: 0.7;
+            opacity: .8;
+            color: #0b3b5b;
+        }
+
+        /* OVERLAY ANIMAÇÕES */
+        .overlay {
+            position: absolute;
+            inset: 12px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(.98);
+            transition: opacity .18s ease, transform .18s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .overlayCard {
+            width: min(520px, 92%);
+            border-radius: 22px;
+            padding: 18px 16px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .35);
+            border: 1px solid rgba(255, 255, 255, .18);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overlayTitle {
+            font-size: clamp(20px, 5.2vw, 34px);
+            font-weight: 900;
+            letter-spacing: .6px;
+        }
+
+        .overlaySub {
+            margin-top: 8px;
+            font-size: 14px;
+            opacity: .95;
+            font-weight: 800;
+        }
+
+        .overlayHint {
+            margin-top: 10px;
+            font-size: 12px;
+            opacity: .9;
+        }
+
+        /* confetti simples */
+        .confetti {
+            position: absolute;
+            inset: -30px;
+            opacity: .9;
+            pointer-events: none;
+            filter: blur(.2px);
+        }
+
+        .confetti i {
+            position: absolute;
+            width: 10px;
+            height: 16px;
+            border-radius: 4px;
+            opacity: .95;
+            animation: fall 900ms ease-out forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-40px) rotate(0deg) scale(.9);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(340px) rotate(260deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* tipos */
+        .overlay.win .overlayCard {
+            background: linear-gradient(135deg, rgba(11, 59, 91, .92), rgba(221, 106, 30, .92));
+        }
+
+        .overlay.win .overlayTitle::before {
+            content: "🏆 ";
+        }
+
+        .overlay.mid .overlayCard {
+            background: linear-gradient(135deg, rgba(255, 185, 0, .88), rgba(221, 106, 30, .88));
+        }
+
+        .overlay.mid .overlayTitle::before {
+            content: "⚠️ ";
+        }
+
+        .overlay.lose .overlayCard {
+            background: linear-gradient(135deg, rgba(255, 58, 58, .88), rgba(11, 59, 91, .82));
+        }
+
+        .overlay.lose .overlayTitle::before {
+            content: "😅 ";
+        }
+
+        /* pulso da vitória */
+        .overlay.win .overlayCard {
+            animation: pop 700ms ease both;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(.92);
+            }
+
+            55% {
+                transform: scale(1.03);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* modo compacto */
+        @media (max-height: 740px) {
+            .main {
+                gap: 14px;
+            }
+
+            .status {
+                padding: 10px 16px;
+            }
+
+            .reset {
+                padding: 12px;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
         }
     </style>
 </head>
 
 <body>
-
     <div class="container">
 
+        <!-- OVERLAY -->
+        <div class="overlay" id="overlay">
+            <div class="overlayCard">
+                <div class="confetti" id="confetti"></div>
+                <div class="overlayTitle" id="overlayTitle">Você ganhou!</div>
+                <div class="overlaySub" id="overlaySub">CRAVOU 10.00</div>
+                <div class="overlayHint" id="overlayHint">Toque em REINICIAR para jogar novamente</div>
+            </div>
+        </div>
+
         <header class="header">
-
             <div class="logoArea">
-
-                <img class="logo" src="https://i.imgur.com/8QfQYpL.png">
-
+                <img class="logo" src="img/logo.png" alt="Castelão">
                 <div>
                     <div class="title">DESAFIO 10.00s</div>
-                    <div class="subtitle">10.00 prêmio TOP • 9.95–10.05 prêmio menor</div>
+                    <div class="subtitle">10.00 = prêmio TOP • 9.95–10.05 = prêmio menor</div>
                 </div>
-
             </div>
-
             <button class="full" onclick="toggleFull()">Tela cheia</button>
-
         </header>
 
-
         <div class="main">
-
-            <div class="timer">
+            <div class="timer" id="timer">
                 <div class="sec" id="sec">00</div>
                 <div class="dot">.</div>
                 <div class="ms" id="ms">00</div>
@@ -206,9 +386,7 @@
             <button class="bigButton" id="btn">INICIAR</button>
 
             <button class="reset" onclick="reset()">REINICIAR</button>
-
         </div>
-
 
         <div class="footer">
             Castelão • Desafio presencial • Dica: treine no link da bio
@@ -216,107 +394,147 @@
 
     </div>
 
-
     <script>
+        let running = false;
+        let startTime = 0;
+        let elapsed = 0;
+        let raf = null;
 
-        let running = false
-        let startTime = 0
-        let elapsed = 0
-        let raf
+        const sec = document.getElementById("sec");
+        const ms = document.getElementById("ms");
+        const btn = document.getElementById("btn");
+        const status = document.getElementById("status");
+        const timer = document.getElementById("timer");
 
-        const sec = document.getElementById("sec")
-        const ms = document.getElementById("ms")
-        const btn = document.getElementById("btn")
-        const status = document.getElementById("status")
+        const overlay = document.getElementById("overlay");
+        const overlayTitle = document.getElementById("overlayTitle");
+        const overlaySub = document.getElementById("overlaySub");
+        const overlayHint = document.getElementById("overlayHint");
+        const confetti = document.getElementById("confetti");
+
+        // regras
+        const TARGET = 10.00;
+        const TOL_MIN = 9.95;
+        const TOL_MAX = 10.05;
 
         function update() {
+            const now = performance.now();
+            const time = elapsed + (now - startTime) / 1000;
 
-            let now = performance.now()
-            let time = elapsed + (now - startTime) / 1000
+            const s = Math.floor(time);
+            const c = Math.floor((time % 1) * 100);
 
-            let s = Math.floor(time)
-            let c = Math.floor((time % 1) * 100)
+            sec.innerText = String(s).padStart(2, "0");
+            ms.innerText = String(c).padStart(2, "0");
 
-            sec.innerText = String(s).padStart(2, "0")
-            ms.innerText = String(c).padStart(2, "0")
+            raf = requestAnimationFrame(update);
+        }
 
-            raf = requestAnimationFrame(update)
+        function showOverlay(type, title, sub) {
+            overlay.classList.remove("win", "mid", "lose", "show");
+            confetti.innerHTML = "";
 
+            overlay.classList.add(type);
+            overlayTitle.textContent = title;
+            overlaySub.textContent = sub;
+
+            // confetti só na vitória
+            if (type === "win") {
+                const pieces = 26;
+                for (let i = 0; i < pieces; i++) {
+                    const p = document.createElement("i");
+                    const left = Math.random() * 100;
+                    const delay = Math.random() * 120;
+                    const sizeW = 8 + Math.random() * 8;
+                    const sizeH = 10 + Math.random() * 10;
+                    const rot = Math.random() * 360;
+
+                    // cores castelão + branco + amarelo
+                    const palette = ["#dd6a1e", "#ff8c3a", "#0b3b5b", "#ffffff", "#ffb900"];
+                    const color = palette[Math.floor(Math.random() * palette.length)];
+
+                    p.style.left = left + "%";
+                    p.style.top = (-10 - Math.random() * 40) + "px";
+                    p.style.width = sizeW + "px";
+                    p.style.height = sizeH + "px";
+                    p.style.background = color;
+                    p.style.transform = `rotate(${rot}deg)`;
+                    p.style.animationDelay = delay + "ms";
+                    confetti.appendChild(p);
+                }
+                // vibração (quando tiver)
+                if (navigator.vibrate) navigator.vibrate([80, 60, 120]);
+            } else if (type === "mid") {
+                if (navigator.vibrate) navigator.vibrate([50, 40, 60]);
+            } else {
+                if (navigator.vibrate) navigator.vibrate(80);
+                // shake no cronômetro
+                timer.classList.remove("shake");
+                void timer.offsetWidth; // reflow
+                timer.classList.add("shake");
+                setTimeout(() => timer.classList.remove("shake"), 500);
+            }
+
+            overlay.classList.add("show");
+
+            // some sozinho depois de 1.2s (só o overlay; status continua)
+            setTimeout(() => overlay.classList.remove("show"), 1200);
         }
 
         btn.onclick = () => {
-
             if (!running) {
-
-                running = true
-                startTime = performance.now()
-                btn.innerText = "PARAR"
-                btn.classList.add("stop")
-
-                status.innerText = "Valendo! Tente parar em 10.00"
-
-                update()
-
+                running = true;
+                startTime = performance.now();
+                btn.innerText = "PARAR";
+                btn.classList.add("stop");
+                status.innerText = "Valendo! tente parar em 10.00";
+                update();
             } else {
+                running = false;
+                cancelAnimationFrame(raf);
 
-                running = false
-                cancelAnimationFrame(raf)
+                elapsed += (performance.now() - startTime) / 1000;
 
-                elapsed += (performance.now() - startTime) / 1000
+                const result = Math.round(elapsed * 100) / 100;
 
-                let result = Math.round(elapsed * 100) / 100
-
-                if (result == 10) {
-
-                    status.innerText = "CRAVOU 10.00 🎉 PRÊMIO TOP"
-
-                } else if (result >= 9.95 && result <= 10.05) {
-
-                    status.innerText = "Parou em " + result.toFixed(2) + " • prêmio menor"
-
+                if (result === TARGET) {
+                    status.innerText = "CRAVOU 10.00 🎉 PRÊMIO TOP";
+                    showOverlay("win", "VOCÊ GANHOU!", "CRAVOU 10.00 • PRÊMIO TOP");
+                } else if (result >= TOL_MIN && result <= TOL_MAX) {
+                    status.innerText = "Parou em " + result.toFixed(2) + " • prêmio menor";
+                    showOverlay("mid", "QUASE LÁ!", "Parou em " + result.toFixed(2) + " • PRÊMIO MENOR");
                 } else {
-
-                    status.innerText = "Parou em " + result.toFixed(2) + " • tente novamente"
-
+                    status.innerText = "Parou em " + result.toFixed(2) + " • tente novamente";
+                    showOverlay("lose", "NÃO FOI DESSA VEZ", "Parou em " + result.toFixed(2) + " • TENTA DE NOVO");
                 }
 
-                btn.innerText = "INICIAR"
-                btn.classList.remove("stop")
-
+                btn.innerText = "INICIAR";
+                btn.classList.remove("stop");
             }
-
-        }
+        };
 
         function reset() {
-
-            running = false
-            cancelAnimationFrame(raf)
-
-            elapsed = 0
-            sec.innerText = "00"
-            ms.innerText = "00"
-
-            btn.innerText = "INICIAR"
-            btn.classList.remove("stop")
-
-            status.innerText = "Toque em INICIAR para começar"
-
+            running = false;
+            cancelAnimationFrame(raf);
+            elapsed = 0;
+            sec.innerText = "00";
+            ms.innerText = "00";
+            btn.innerText = "INICIAR";
+            btn.classList.remove("stop");
+            status.innerText = "Toque em INICIAR para começar";
+            overlay.classList.remove("show", "win", "mid", "lose");
         }
 
         function toggleFull() {
-
             if (!document.fullscreenElement) {
-
-                document.documentElement.requestFullscreen()
-
+                document.documentElement.requestFullscreen?.();
             } else {
-
-                document.exitFullscreen()
-
+                document.exitFullscreen?.();
             }
-
         }
 
+        // init
+        reset();
     </script>
 
 </body>
