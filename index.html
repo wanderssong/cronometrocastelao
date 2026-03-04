@@ -1,153 +1,87 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Castelão • Desafio 10.00s</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio 10 segundos</title>
 
     <style>
-        :root {
-            /* Paleta Castelão (baseada na logo) */
-            --purple-1: #3A0B77;
-            --purple-2: #6A22D8;
-            --purple-3: #9A63FF;
-
-            --orange-1: #FF6A00;
-            --orange-2: #FF8A1A;
-
-            --bg: #05060B;
-            --text: rgba(255, 255, 255, .92);
-            --muted: rgba(255, 255, 255, .72);
-
-            --stroke: rgba(255, 255, 255, .14);
-            --stroke2: rgba(255, 255, 255, .10);
-
-            --shadow: 0 26px 60px rgba(0, 0, 0, .55);
-        }
-
         * {
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            height: 100%;
-        }
-
-        body {
             margin: 0;
-            color: var(--text);
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            overflow: hidden;
-            /* sem rolagem */
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            touch-action: manipulation;
-
-            background:
-                radial-gradient(900px 650px at 20% 15%, rgba(154, 99, 255, .22), transparent 62%),
-                radial-gradient(900px 650px at 80% 25%, rgba(255, 138, 26, .18), transparent 62%),
-                radial-gradient(1100px 900px at 50% 95%, rgba(106, 34, 216, .18), transparent 62%),
-                linear-gradient(180deg, #05060B, #060A14 55%, #05060B);
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        .app {
+        body {
             height: 100svh;
-            height: 100dvh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #120c1f, #0a0715);
+            color: white;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            height: 100%;
             display: grid;
             grid-template-rows: auto 1fr auto;
-            padding: env(safe-area-inset-top) 14px env(safe-area-inset-bottom) 14px;
-            gap: 12px;
-            max-width: 980px;
-            margin: 0 auto;
+            padding: 12px;
+            gap: 10px;
         }
 
-        /* Header */
-        .topbar {
+        /* HEADER */
+
+        .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
             padding: 10px 12px;
-            border-radius: 18px;
-
-            background:
-                linear-gradient(180deg, rgba(106, 34, 216, .18), rgba(0, 0, 0, .18));
-            border: 1px solid rgba(154, 99, 255, .22);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .38);
-            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
         }
 
-        .brand {
+        .logoArea {
             display: flex;
             align-items: center;
             gap: 10px;
-            min-width: 0;
         }
 
-        .brandLogo {
-            width: 50px;
-            height: 50px;
-            border-radius: 16px;
-            object-fit: contain;
-            background:
-                radial-gradient(30px 30px at 30% 25%, rgba(255, 255, 255, .16), transparent 55%),
-                linear-gradient(180deg, rgba(255, 138, 26, .20), rgba(106, 34, 216, .18));
-            border: 1px solid rgba(255, 138, 26, .20);
-            box-shadow:
-                0 14px 26px rgba(0, 0, 0, .40),
-                inset 0 0 0 1px rgba(0, 0, 0, .22);
-            padding: 6px;
-            flex: 0 0 auto;
-        }
-
-        .brandText {
-            min-width: 0;
-            line-height: 1.1;
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
         }
 
         .title {
-            font-weight: 950;
             font-size: 14px;
-            letter-spacing: .6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-weight: bold;
         }
 
         .subtitle {
-            margin-top: 4px;
             font-size: 12px;
-            color: var(--muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            opacity: 0.7;
         }
 
-        .fullBtn {
-            flex: 0 0 auto;
-            padding: 10px 12px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 138, 26, .22);
-            background:
-                linear-gradient(180deg, rgba(255, 138, 26, .16), rgba(0, 0, 0, .18));
-            color: var(--text);
-            font-weight: 900;
-            letter-spacing: .2px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 10px 22px rgba(0, 0, 0, .35);
+        .full {
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
         }
 
-        .fullBtn:active {
-            transform: scale(.98);
-        }
+        /* MAIN */
 
-        /* Main */
         .main {
-            min-height: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -155,395 +89,236 @@
             gap: 14px;
         }
 
+        /* TIMER */
+
         .timer {
             display: flex;
-            align-items: baseline;
-            justify-content: center;
-            line-height: 1;
-            font-weight: 980;
-            letter-spacing: 1px;
-            text-shadow: 0 14px 44px rgba(0, 0, 0, .70);
-
-            /* brilho roxo/laranja no texto */
-            filter: drop-shadow(0 0 22px rgba(154, 99, 255, .18));
+            align-items: flex-end;
+            font-weight: bold;
         }
 
         .timer .sec {
-            font-size: clamp(70px, 10vw, 150px);
+            font-size: clamp(60px, 13vw, 110px);
         }
 
         .timer .dot {
-            font-size: clamp(26px, 4vw, 54px);
-            margin: 0 10px;
-            opacity: .95;
-            color: rgba(255, 255, 255, .88);
+            font-size: clamp(22px, 5vw, 40px);
+            margin: 0 5px;
         }
 
         .timer .ms {
-            font-size: clamp(40px, 6vw, 96px);
-            opacity: .98;
-            color: rgba(255, 255, 255, .92);
+            font-size: clamp(36px, 8vw, 70px);
         }
 
-        /* Status pill “Castelão” */
-        .statusPill {
-            width: min(780px, 92%);
-            padding: 12px 14px;
-            border-radius: 999px;
+        /* STATUS */
+
+        .status {
+            padding: 10px 16px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.08);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* BOTÃO */
+
+        .bigButton {
+
+            --size: clamp(200px, 34svh, 300px);
+
+            width: var(--size);
+            height: var(--size);
+
+            border-radius: 50%;
+            border: none;
+
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            font-weight: 950;
-            text-align: center;
 
-            border: 1px solid rgba(154, 99, 255, .22);
-            background:
-                linear-gradient(90deg, rgba(255, 138, 26, .10), rgba(106, 34, 216, .14));
-            box-shadow: 0 14px 26px rgba(0, 0, 0, .35);
-        }
+            font-size: clamp(20px, 5vw, 28px);
+            font-weight: bold;
 
-        .statusDot {
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, .65);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, .08);
-            flex: 0 0 auto;
-        }
+            background: linear-gradient(180deg, #4a3d77, #2a2148);
 
-        .statusPill.good {
-            border-color: rgba(0, 255, 140, .30);
-            background: linear-gradient(90deg, rgba(0, 255, 140, .12), rgba(106, 34, 216, .12));
-        }
-
-        .statusPill.good .statusDot {
-            background: #00ff8a;
-            box-shadow: 0 0 0 3px rgba(0, 255, 140, .18);
-        }
-
-        .statusPill.warn {
-            border-color: rgba(255, 185, 0, .34);
-            background: linear-gradient(90deg, rgba(255, 185, 0, .14), rgba(255, 138, 26, .10));
-        }
-
-        .statusPill.warn .statusDot {
-            background: #ffb900;
-            box-shadow: 0 0 0 3px rgba(255, 185, 0, .18);
-        }
-
-        .statusPill.bad {
-            border-color: rgba(255, 60, 60, .34);
-            background: linear-gradient(90deg, rgba(255, 60, 60, .14), rgba(106, 34, 216, .10));
-        }
-
-        .statusPill.bad .statusDot {
-            background: #ff3b3b;
-            box-shadow: 0 0 0 3px rgba(255, 60, 60, .18);
-        }
-
-        /* Botão principal “castelo” */
-        .bigBtn {
-            width: min(520px, 86%);
-            max-width: clamp(240px, 42vw, 380px);
-            aspect-ratio: 1 / 1;
-            border-radius: 999px;
-            border: 2px solid rgba(255, 138, 26, .18);
-
-            background:
-                radial-gradient(520px 420px at 35% 28%, rgba(255, 255, 255, .16), transparent 55%),
-                radial-gradient(520px 420px at 70% 78%, rgba(0, 0, 0, .35), transparent 55%),
-                linear-gradient(180deg, rgba(154, 99, 255, .32), rgba(58, 11, 119, .55));
-
-            color: #fff;
-            font-weight: 980;
-            letter-spacing: 1px;
-            font-size: clamp(18px, 3.5vw, 30px);
-
-            display: grid;
-            place-items: center;
-            position: relative;
-            box-shadow: var(--shadow);
-            transform: translateZ(0);
-        }
-
-        .bigBtn::before {
-            /* aro interno “glow” */
-            content: "";
-            position: absolute;
-            inset: 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, .12);
             box-shadow:
-                inset 0 0 0 1px rgba(0, 0, 0, .25),
-                0 0 22px rgba(154, 99, 255, .10);
-            pointer-events: none;
+                0 20px 50px rgba(0, 0, 0, 0.6),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.1);
         }
 
-        .bigBtn:active {
-            transform: scale(.985);
+        .bigButton.stop {
+            background: linear-gradient(180deg, #ff3a3a, #b00000);
         }
 
-        .bigBtn.stop {
-            border-color: rgba(255, 60, 60, .22);
-            background:
-                radial-gradient(520px 420px at 35% 28%, rgba(255, 255, 255, .14), transparent 55%),
-                radial-gradient(520px 420px at 70% 78%, rgba(0, 0, 0, .38), transparent 55%),
-                linear-gradient(180deg, rgba(255, 60, 60, .34), rgba(106, 34, 216, .32));
+        /* RESET */
+
+        .reset {
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            width: 100%;
+            font-weight: bold;
         }
 
-        .resetBtn {
-            width: min(520px, 86%);
-            padding: 13px 16px;
-            border-radius: 18px;
-            border: 1px solid rgba(154, 99, 255, .20);
-            background: rgba(255, 255, 255, .06);
-            color: var(--text);
-            font-weight: 950;
-            letter-spacing: .6px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, .30);
-        }
+        /* FOOTER */
 
-        .resetBtn:active {
-            transform: scale(.99);
-        }
-
-        .footNote {
+        .footer {
             text-align: center;
             font-size: 12px;
-            color: var(--muted);
-            padding: 4px 10px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .sep {
-            opacity: .5;
-            margin: 0 6px;
-        }
-
-        @media (max-height: 720px) {
-            .app {
-                gap: 10px;
-            }
-
-            .topbar {
-                padding: 8px 10px;
-            }
-
-            .statusPill {
-                padding: 10px 12px;
-            }
-
-            .main {
-                gap: 10px;
-            }
-
-            .resetBtn {
-                padding: 12px 14px;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .brandLogo {
-                width: 46px;
-                height: 46px;
-                border-radius: 15px;
-            }
-
-            .fullBtn {
-                padding: 9px 10px;
-                border-radius: 14px;
-            }
+            opacity: 0.7;
         }
     </style>
 </head>
 
 <body>
-    <div class="app">
-        <header class="topbar">
-            <div class="brand">
-                <!-- ✅ sua logo -->
-                <img class="brandLogo" src="img/logo.png" alt="Castelão" />
-                <div class="brandText">
+
+    <div class="container">
+
+        <header class="header">
+
+            <div class="logoArea">
+
+                <img class="logo" src="https://i.imgur.com/8QfQYpL.png">
+
+                <div>
                     <div class="title">DESAFIO 10.00s</div>
-                    <div class="subtitle">10.00 = prêmio TOP • 9.95–10.05 = prêmio menor</div>
+                    <div class="subtitle">10.00 prêmio TOP • 9.95–10.05 prêmio menor</div>
                 </div>
+
             </div>
 
-            <button class="fullBtn" id="fullBtn" type="button" aria-label="Tela cheia">⛶ Tela cheia</button>
+            <button class="full" onclick="toggleFull()">Tela cheia</button>
+
         </header>
 
-        <main class="main">
-            <div class="timer" aria-label="Cronômetro">
-                <span class="sec" id="sec">00</span>
-                <span class="dot">.</span>
-                <span class="ms" id="ms">00</span>
+
+        <div class="main">
+
+            <div class="timer">
+                <div class="sec" id="sec">00</div>
+                <div class="dot">.</div>
+                <div class="ms" id="ms">00</div>
             </div>
 
-            <div class="statusPill" id="statusPill">
-                <span class="statusDot"></span>
-                <span id="statusText">Toque em INICIAR para começar</span>
-            </div>
+            <div class="status" id="status">Toque em INICIAR para começar</div>
 
-            <button class="bigBtn" id="toggleBtn" type="button">INICIAR</button>
-            <button class="resetBtn" id="resetBtn" type="button">REINICIAR</button>
-        </main>
+            <button class="bigButton" id="btn">INICIAR</button>
 
-        <footer class="footNote">
-            Castelão • Desafio presencial <span class="sep">•</span> Dica: treine no link da bio
-        </footer>
+            <button class="reset" onclick="reset()">REINICIAR</button>
+
+        </div>
+
+
+        <div class="footer">
+            Castelão • Desafio presencial • Dica: treine no link da bio
+        </div>
+
     </div>
 
+
     <script>
-        // ======= CONFIG DO DESAFIO =======
-        const TARGET = 10.00;
-        const TOL_MIN = 9.95;
-        const TOL_MAX = 10.05;
 
-        // ======= ELEMENTOS =======
-        const secEl = document.getElementById('sec');
-        const msEl = document.getElementById('ms');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const statusText = document.getElementById('statusText');
-        const statusPill = document.getElementById('statusPill');
-        const fullBtn = document.getElementById('fullBtn');
+        let running = false
+        let startTime = 0
+        let elapsed = 0
+        let raf
 
-        // ======= ESTADO =======
-        let running = false;
-        let rafId = null;
-        let startAt = 0;
-        let elapsed = 0; // sempre guardado arredondado quando PARA
+        const sec = document.getElementById("sec")
+        const ms = document.getElementById("ms")
+        const btn = document.getElementById("btn")
+        const status = document.getElementById("status")
 
-        // ======= HELPERS =======
-        function pad2(n) { return String(n).padStart(2, '0'); }
+        function update() {
 
-        function round2(n) {
-            // ✅ arredondamento consistente (tela = resultado)
-            return Math.round((n + Number.EPSILON) * 100) / 100;
+            let now = performance.now()
+            let time = elapsed + (now - startTime) / 1000
+
+            let s = Math.floor(time)
+            let c = Math.floor((time % 1) * 100)
+
+            sec.innerText = String(s).padStart(2, "0")
+            ms.innerText = String(c).padStart(2, "0")
+
+            raf = requestAnimationFrame(update)
+
         }
 
-        function formatTime(seconds) {
-            // SS.CC
-            const s = Math.floor(seconds) % 60;
-            const cent = Math.round((seconds - Math.floor(seconds)) * 100);
-            return { s: pad2(s), c: pad2(Math.max(0, Math.min(99, cent))) };
-        }
+        btn.onclick = () => {
 
-        function setStatus(type, text) {
-            statusPill.classList.remove('good', 'warn', 'bad');
-            if (type) statusPill.classList.add(type);
-            statusText.textContent = text;
-        }
+            if (!running) {
 
-        function render(seconds) {
-            const t = formatTime(seconds);
-            secEl.textContent = t.s;
-            msEl.textContent = t.c;
-        }
+                running = true
+                startTime = performance.now()
+                btn.innerText = "PARAR"
+                btn.classList.add("stop")
 
-        function evaluateResult(rounded) {
-            const txt = rounded.toFixed(2);
+                status.innerText = "Valendo! Tente parar em 10.00"
 
-            if (rounded === TARGET) {
-                setStatus('good', `CRAVOU ${txt}! 🎉 Prêmio TOP`);
-                return;
+                update()
+
+            } else {
+
+                running = false
+                cancelAnimationFrame(raf)
+
+                elapsed += (performance.now() - startTime) / 1000
+
+                let result = Math.round(elapsed * 100) / 100
+
+                if (result == 10) {
+
+                    status.innerText = "CRAVOU 10.00 🎉 PRÊMIO TOP"
+
+                } else if (result >= 9.95 && result <= 10.05) {
+
+                    status.innerText = "Parou em " + result.toFixed(2) + " • prêmio menor"
+
+                } else {
+
+                    status.innerText = "Parou em " + result.toFixed(2) + " • tente novamente"
+
+                }
+
+                btn.innerText = "INICIAR"
+                btn.classList.remove("stop")
+
             }
-            if (rounded >= TOL_MIN && rounded <= TOL_MAX) {
-                setStatus('warn', `Parou em ${txt} • Prêmio menor`);
-                return;
-            }
-            setStatus('bad', `Parou em ${txt} • Tente de novo`);
-        }
 
-        function loop() {
-            if (!running) return;
-
-            const now = performance.now();
-            const raw = elapsed + (now - startAt) / 1000;
-
-            // ✅ renderiza usando o mesmo arredondamento do resultado
-            const rounded = round2(raw);
-            render(rounded);
-
-            rafId = requestAnimationFrame(loop);
-        }
-
-        function start() {
-            if (running) return;
-            running = true;
-
-            toggleBtn.textContent = 'PARAR';
-            toggleBtn.classList.add('stop');
-
-            setStatus('', 'Valendo! Tenta cravar 10.00');
-            startAt = performance.now();
-            rafId = requestAnimationFrame(loop);
-        }
-
-        function stop() {
-            if (!running) return;
-            running = false;
-
-            const now = performance.now();
-            const raw = elapsed + (now - startAt) / 1000;
-
-            // ✅ congela UM valor e usa ele pra tudo
-            elapsed = round2(raw);
-
-            if (rafId) cancelAnimationFrame(rafId);
-            rafId = null;
-
-            toggleBtn.textContent = 'INICIAR';
-            toggleBtn.classList.remove('stop');
-
-            render(elapsed);
-            evaluateResult(elapsed);
         }
 
         function reset() {
-            running = false;
-            if (rafId) cancelAnimationFrame(rafId);
-            rafId = null;
 
-            elapsed = 0;
-            startAt = 0;
+            running = false
+            cancelAnimationFrame(raf)
 
-            toggleBtn.textContent = 'INICIAR';
-            toggleBtn.classList.remove('stop');
+            elapsed = 0
+            sec.innerText = "00"
+            ms.innerText = "00"
 
-            render(0);
-            setStatus('', 'Toque em INICIAR para começar');
+            btn.innerText = "INICIAR"
+            btn.classList.remove("stop")
+
+            status.innerText = "Toque em INICIAR para começar"
+
         }
 
-        toggleBtn.addEventListener('click', () => running ? stop() : start());
-        resetBtn.addEventListener('click', reset);
+        function toggleFull() {
 
-        fullBtn.addEventListener('click', async () => {
-            try {
-                const root = document.documentElement;
-                if (!document.fullscreenElement) {
-                    await root.requestFullscreen?.();
-                    if (screen.orientation && screen.orientation.lock) {
-                        try { await screen.orientation.lock('portrait'); } catch (e) { }
-                    }
-                } else {
-                    await document.exitFullscreen?.();
-                }
-            } catch (e) { }
-        });
+            if (!document.fullscreenElement) {
 
-        window.addEventListener('resize', () => {
-            const current = running
-                ? round2(elapsed + (performance.now() - startAt) / 1000)
-                : elapsed;
-            render(current);
-        });
+                document.documentElement.requestFullscreen()
 
-        reset();
+            } else {
+
+                document.exitFullscreen()
+
+            }
+
+        }
+
     </script>
+
 </body>
 
 </html>
