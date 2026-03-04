@@ -4,12 +4,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <title>Desafio 10 Segundos — Castelão</title>
+    <title>Desafio 10.00s — Castelão</title>
     <style>
         :root {
             --bg1: #070A12;
             --bg2: #0B1430;
-            --card: #0c1224cc;
             --stroke: #ffffff14;
             --text: #eaf0ff;
             --muted: #a9b3d1;
@@ -17,12 +16,11 @@
             --bad: #ff4d6d;
             --warn: #ffd166;
             --accent: #ff7a18;
-            /* laranja castelão (ajuste se quiser) */
             --accent2: #1fb6ff;
             --shadow: 0 28px 80px rgba(0, 0, 0, .55);
             --shadow2: 0 10px 30px rgba(0, 0, 0, .35);
-            --radius: 28px;
-            --glass: blur(12px) saturate(140%);
+            --glass: blur(14px) saturate(145%);
+            --r: 34px;
         }
 
         * {
@@ -36,61 +34,66 @@
 
         body {
             margin: 0;
-            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
             color: var(--text);
             background:
-                radial-gradient(1200px 800px at 20% 20%, rgba(255, 122, 24, .20), transparent 55%),
-                radial-gradient(1000px 700px at 80% 25%, rgba(31, 182, 255, .18), transparent 60%),
-                radial-gradient(900px 700px at 50% 90%, rgba(57, 255, 180, .12), transparent 55%),
+                radial-gradient(1300px 900px at 20% 20%, rgba(255, 122, 24, .22), transparent 55%),
+                radial-gradient(1100px 800px at 80% 20%, rgba(31, 182, 255, .18), transparent 60%),
+                radial-gradient(1000px 800px at 50% 95%, rgba(57, 255, 180, .12), transparent 55%),
                 linear-gradient(180deg, var(--bg1), var(--bg2));
-            overflow-x: hidden;
+            overflow: hidden;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* brilho 3D */
         .noise {
             position: fixed;
             inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
             mix-blend-mode: overlay;
-            opacity: .22;
+            opacity: .20;
             pointer-events: none;
         }
 
         .grid3d {
             position: fixed;
-            inset: -20%;
+            inset: -25%;
             background:
                 linear-gradient(transparent 0 96%, rgba(255, 255, 255, .06) 96% 100%),
                 linear-gradient(90deg, transparent 0 96%, rgba(255, 255, 255, .06) 96% 100%);
-            background-size: 80px 80px, 80px 80px;
-            transform: perspective(900px) rotateX(62deg) translateY(-18%);
-            filter: blur(.2px);
-            opacity: .16;
+            background-size: 86px 86px, 86px 86px;
+            transform: perspective(950px) rotateX(62deg) translateY(-18%);
+            opacity: .14;
             pointer-events: none;
         }
 
         .wrap {
-            min-height: 100%;
+            height: 100%;
             display: grid;
             place-items: center;
-            padding: 24px;
+            padding: 18px;
         }
 
         .stage {
-            width: min(980px, 100%);
+            width: min(1100px, 100%);
+            height: min(720px, 100%);
             position: relative;
+            transform-style: preserve-3d;
         }
 
         .card {
-            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
+            height: 100%;
+            border-radius: var(--r);
             border: 1px solid var(--stroke);
-            border-radius: var(--radius);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .03));
             box-shadow: var(--shadow);
             backdrop-filter: var(--glass);
             -webkit-backdrop-filter: var(--glass);
+            position: relative;
             overflow: hidden;
             transform-style: preserve-3d;
-            position: relative;
+            /* FIXO: sem tilt dinâmico */
+            transform: none !important;
         }
 
         .card::before {
@@ -98,44 +101,50 @@
             position: absolute;
             inset: -2px;
             background:
-                radial-gradient(600px 220px at 15% 0%, rgba(255, 122, 24, .28), transparent 60%),
-                radial-gradient(520px 220px at 85% 10%, rgba(31, 182, 255, .22), transparent 60%),
-                radial-gradient(520px 260px at 55% 110%, rgba(57, 255, 180, .18), transparent 60%);
-            opacity: .9;
+                radial-gradient(740px 260px at 16% 0%, rgba(255, 122, 24, .28), transparent 60%),
+                radial-gradient(620px 260px at 86% 10%, rgba(31, 182, 255, .22), transparent 60%),
+                radial-gradient(640px 320px at 55% 120%, rgba(57, 255, 180, .18), transparent 60%);
             filter: blur(18px);
-            transform: translateZ(-1px);
+            opacity: .9;
             pointer-events: none;
+            transform: translateZ(-1px);
         }
 
         header {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 18px 18px 10px 18px;
-            position: relative;
-            z-index: 2;
-            gap: 14px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            min-width: 240px;
+            padding: 10px 12px;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(0, 0, 0, .18);
+            box-shadow: var(--shadow2);
+            transform: perspective(900px) rotateX(8deg);
         }
 
         .logo {
             width: 54px;
             height: 54px;
             border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, .14);
             background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .12);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, .35);
             display: grid;
             place-items: center;
             overflow: hidden;
-            transform: perspective(600px) rotateX(10deg) rotateY(-10deg);
+            box-shadow: 0 14px 26px rgba(0, 0, 0, .35);
+            transform: perspective(650px) rotateX(10deg) rotateY(-10deg);
         }
 
         .logo img {
@@ -143,159 +152,142 @@
             height: 100%;
             object-fit: contain;
             padding: 8px;
-            filter: drop-shadow(0 10px 10px rgba(0, 0, 0, .35));
+            filter: drop-shadow(0 10px 12px rgba(0, 0, 0, .35));
         }
 
-        .titlebox {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
+        .tbox {
             line-height: 1.05;
         }
 
-        .title {
-            font-weight: 900;
+        .tbox .t {
+            font-weight: 950;
             letter-spacing: .4px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 14px;
+            color: rgba(234, 240, 255, .92);
         }
 
-        .pill {
+        .tbox .s {
+            margin-top: 3px;
+            font-weight: 900;
             font-size: 12px;
-            font-weight: 800;
-            padding: 6px 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, .14);
-            background: rgba(0, 0, 0, .18);
             color: var(--muted);
         }
 
-        .subtitle {
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .right {
+        .topBtns {
             display: flex;
             gap: 10px;
-            align-items: center;
             flex-wrap: wrap;
             justify-content: flex-end;
-            flex: 1;
         }
 
-        .chip {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            padding: 10px 12px;
+        .btn {
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            padding: 12px 14px;
             border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(0, 0, 0, .16);
-            box-shadow: var(--shadow2);
-            transform: perspective(700px) rotateX(6deg);
-        }
-
-        .chip strong {
-            font-size: 12px;
-            color: var(--muted);
-            font-weight: 800;
+            font-weight: 950;
             letter-spacing: .2px;
-        }
-
-        .chip span {
-            font-size: 12px;
-            font-weight: 900;
             color: var(--text);
-            padding: 4px 8px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .10);
-        }
-
-        .content {
-            padding: 14px 18px 18px 18px;
-            position: relative;
-            z-index: 2;
-            display: grid;
-            grid-template-columns: 1.2fr .8fr;
-            gap: 16px;
-        }
-
-        @media (max-width: 880px) {
-            .content {
-                grid-template-columns: 1fr
-            }
-
-            .brand {
-                min-width: auto
-            }
-
-            header {
-                justify-content: center
-            }
-
-            .right {
-                justify-content: center
-            }
-        }
-
-        .panel {
-            border-radius: 24px;
+            background: rgba(0, 0, 0, .18);
             border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(3, 6, 16, .35);
             box-shadow: var(--shadow2);
-            overflow: hidden;
+            transform: perspective(900px) rotateX(8deg);
+            transition: transform .15s ease, filter .15s ease;
             position: relative;
-            transform-style: preserve-3d;
+            overflow: hidden;
         }
 
-        .panel::before {
-            content: "";
+        .btn:hover {
+            filter: brightness(1.08)
+        }
+
+        .btn:active {
+            transform: perspective(900px) rotateX(3deg) translateY(2px)
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(255, 122, 24, .95), rgba(255, 55, 98, .55));
+            border: 1px solid rgba(255, 122, 24, .35);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, rgba(31, 182, 255, .70), rgba(57, 255, 180, .35));
+            border: 1px solid rgba(31, 182, 255, .34);
+        }
+
+        .btn[disabled] {
+            opacity: .55;
+            cursor: not-allowed;
+            filter: saturate(.6)
+        }
+
+        .shine {
             position: absolute;
-            inset: -2px;
-            background:
-                radial-gradient(420px 220px at 10% 20%, rgba(255, 122, 24, .16), transparent 70%),
-                radial-gradient(420px 220px at 90% 30%, rgba(31, 182, 255, .14), transparent 70%);
-            filter: blur(14px);
-            opacity: .8;
+            top: -45%;
+            left: -70%;
+            width: 60%;
+            height: 190%;
+            transform: rotate(18deg);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .22), transparent);
+            opacity: .55;
+            animation: shine 2.9s ease-in-out infinite;
             pointer-events: none;
         }
 
-        .timerArea {
-            padding: 18px;
-            display: grid;
-            gap: 14px;
-            position: relative;
-            z-index: 1;
+        @keyframes shine {
+            0% {
+                transform: translateX(-30%) rotate(18deg);
+                opacity: 0
+            }
+
+            25% {
+                opacity: .55
+            }
+
+            60% {
+                opacity: .55
+            }
+
+            100% {
+                transform: translateX(340%) rotate(18deg);
+                opacity: 0
+            }
         }
 
-        .bigTimer {
-            border-radius: 22px;
-            padding: 18px 16px;
+        .center {
+            height: 100%;
+            display: grid;
+            place-items: center;
+            padding: 92px 18px 22px 18px;
+        }
+
+        .timerCard {
+            width: min(980px, 100%);
+            border-radius: 34px;
+            padding: 28px 20px;
             border: 1px solid rgba(255, 255, 255, .12);
-            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
-            box-shadow: 0 20px 45px rgba(0, 0, 0, .45);
-            transform: perspective(900px) rotateX(8deg);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .02));
+            box-shadow: 0 24px 65px rgba(0, 0, 0, .50);
+            transform: perspective(1200px) rotateX(10deg);
             position: relative;
             overflow: hidden;
         }
 
-        .bigTimer::after {
+        .timerCard::after {
             content: "";
             position: absolute;
-            inset: -40%;
+            inset: -45%;
             background: conic-gradient(from 180deg,
                     rgba(255, 122, 24, .0),
-                    rgba(255, 122, 24, .20),
+                    rgba(255, 122, 24, .22),
                     rgba(31, 182, 255, .20),
                     rgba(57, 255, 180, .18),
                     rgba(255, 122, 24, .0));
-            animation: spinGlow 5.8s linear infinite;
-            filter: blur(22px);
-            opacity: .65;
+            animation: spinGlow 5.9s linear infinite;
+            filter: blur(24px);
+            opacity: .70;
+            pointer-events: none;
         }
 
         @keyframes spinGlow {
@@ -310,269 +302,84 @@
             display: flex;
             align-items: baseline;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             font-variant-numeric: tabular-nums;
-            text-shadow: 0 18px 45px rgba(0, 0, 0, .55);
+            text-shadow: 0 18px 50px rgba(0, 0, 0, .55);
         }
 
-        .digits .main {
-            font-size: clamp(52px, 8vw, 88px);
+        .main {
+            font-size: clamp(78px, 10.5vw, 140px);
+            font-weight: 1000;
+            letter-spacing: 2px;
+        }
+
+        .ms {
+            font-size: clamp(28px, 4.2vw, 46px);
             font-weight: 950;
-            letter-spacing: 1px;
+            color: rgba(234, 240, 255, .90);
         }
 
-        .digits .ms {
-            font-size: clamp(22px, 3.3vw, 34px);
-            font-weight: 900;
-            color: rgba(234, 240, 255, .85);
-            opacity: .95;
-        }
-
-        .targetRow {
+        .subline {
+            position: relative;
+            z-index: 2;
+            margin-top: 14px;
             display: flex;
             justify-content: space-between;
             gap: 10px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
-        .badge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: 16px;
+        .pill {
+            padding: 10px 14px;
+            border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(0, 0, 0, .20);
+            background: rgba(0, 0, 0, .18);
+            font-weight: 950;
+            box-shadow: var(--shadow2);
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         .dot {
             width: 10px;
             height: 10px;
-            border-radius: 999px;
+            border-radius: 99px;
             background: var(--warn);
-            box-shadow: 0 0 0 6px rgba(255, 209, 102, .12);
+            box-shadow: 0 0 0 7px rgba(255, 209, 102, .12);
         }
 
-        .badge b {
-            font-weight: 900
-        }
-
-        .badge small {
-            color: var(--muted);
-            font-weight: 700
-        }
-
-        .cta {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        @media (max-width:520px) {
-            .cta {
-                grid-template-columns: 1fr
-            }
-        }
-
-        .btn {
-            appearance: none;
-            border: none;
-            cursor: pointer;
-            padding: 14px 14px;
-            border-radius: 18px;
-            font-weight: 950;
-            letter-spacing: .3px;
-            color: var(--text);
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .14);
-            box-shadow: 0 18px 40px rgba(0, 0, 0, .40);
-            transform: perspective(700px) rotateX(8deg);
-            transition: transform .15s ease, filter .15s ease, background .15s ease;
-            position: relative;
-            overflow: hidden;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn:active {
-            transform: perspective(700px) rotateX(2deg) translateY(2px) scale(.99)
-        }
-
-        .btn:hover {
-            filter: brightness(1.08)
-        }
-
-        .btn.primary {
-            background: linear-gradient(135deg, rgba(255, 122, 24, .95), rgba(255, 55, 98, .55));
-            border: 1px solid rgba(255, 122, 24, .35);
-        }
-
-        .btn.secondary {
-            background: linear-gradient(135deg, rgba(31, 182, 255, .65), rgba(57, 255, 180, .35));
-            border: 1px solid rgba(31, 182, 255, .32);
-        }
-
-        .btn.ghost {
-            background: rgba(0, 0, 0, .18);
-            border: 1px solid rgba(255, 255, 255, .12);
-            color: rgba(234, 240, 255, .92);
+        .hint {
+            color: rgba(234, 240, 255, .88);
             font-weight: 900;
-        }
-
-        .btn[disabled] {
-            opacity: .55;
-            cursor: not-allowed;
-            filter: saturate(.5);
-        }
-
-        .btn .shine {
-            content: "";
-            position: absolute;
-            top: -40%;
-            left: -60%;
-            width: 60%;
-            height: 180%;
-            transform: rotate(18deg);
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .22), transparent);
-            opacity: .55;
-            animation: shine 2.8s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes shine {
-            0% {
-                transform: translateX(-30%) rotate(18deg);
-                opacity: .0
-            }
-
-            25% {
-                opacity: .55
-            }
-
-            55% {
-                opacity: .55
-            }
-
-            100% {
-                transform: translateX(330%) rotate(18deg);
-                opacity: 0
-            }
-        }
-
-        .side {
-            padding: 18px;
-            display: grid;
-            gap: 14px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .howto {
-            border-radius: 22px;
-            border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(0, 0, 0, .18);
-            padding: 14px 14px 12px 14px;
-            box-shadow: var(--shadow2);
-            transform: perspective(900px) rotateX(8deg);
-        }
-
-        .howto h3 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            letter-spacing: .3px;
-            font-weight: 950;
-        }
-
-        .howto ol {
-            margin: 0;
-            padding-left: 18px;
-            color: rgba(234, 240, 255, .90);
-            font-weight: 750;
-            line-height: 1.45;
-            font-size: 13px;
-        }
-
-        .howto li {
-            margin: 6px 0
-        }
-
-        .note {
-            margin-top: 10px;
-            padding: 10px 10px;
-            border-radius: 16px;
-            border: 1px dashed rgba(255, 255, 255, .18);
-            background: rgba(255, 209, 102, .08);
-            color: rgba(255, 235, 200, .92);
-            font-weight: 850;
-            font-size: 12px;
-        }
-
-        .result {
-            border-radius: 22px;
-            border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(0, 0, 0, .18);
-            padding: 14px;
-            box-shadow: var(--shadow2);
-            transform: perspective(900px) rotateX(8deg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .result h3 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            letter-spacing: .3px;
-            font-weight: 950;
-        }
-
-        .result .box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .resValue {
-            font-variant-numeric: tabular-nums;
-            font-size: 18px;
-            font-weight: 950;
-            padding: 10px 12px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .12);
-        }
-
-        .diff {
-            font-size: 12px;
-            font-weight: 900;
-            color: var(--muted);
+            letter-spacing: .2px;
         }
 
         .status {
-            margin-top: 10px;
-            padding: 12px 12px;
-            border-radius: 18px;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 22px;
             border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(255, 255, 255, .05);
-            font-weight: 950;
+            background: rgba(0, 0, 0, .16);
             display: flex;
-            gap: 10px;
-            align-items: center;
             justify-content: space-between;
+            gap: 12px;
+            align-items: center;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+            box-shadow: var(--shadow2);
         }
 
-        .status .tag {
-            padding: 6px 10px;
+        .tag {
+            padding: 7px 12px;
             border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, .14);
             background: rgba(0, 0, 0, .18);
             font-size: 12px;
-            font-weight: 950;
+            font-weight: 1000;
+            letter-spacing: .3px;
         }
 
         .tag.ok {
@@ -590,59 +397,49 @@
             border-color: rgba(255, 209, 102, .35)
         }
 
-        .status .msg {
-            color: rgba(234, 240, 255, .92);
+        .msg {
             font-size: 12px;
-            font-weight: 900;
+            font-weight: 950;
+            color: rgba(234, 240, 255, .92);
         }
 
-        .footerbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 10px 16px 16px 16px;
-            color: rgba(234, 240, 255, .76);
-            font-weight: 800;
-            font-size: 12px;
+        .actions {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
             position: relative;
             z-index: 2;
-            flex-wrap: wrap;
         }
 
-        .kbd {
-            padding: 6px 8px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, .14);
-            background: rgba(0, 0, 0, .18);
-            color: rgba(234, 240, 255, .85);
-            font-weight: 950;
+        @media (max-width:520px) {
+            .actions {
+                grid-template-columns: 1fr
+            }
         }
 
-        /* animações de vibração quando perto do alvo */
         .pulseNear {
-            animation: nearPulse .35s ease-in-out infinite;
+            animation: nearPulse .22s ease-in-out infinite;
         }
 
         @keyframes nearPulse {
 
             0%,
             100% {
-                transform: perspective(900px) rotateX(8deg) translateY(0)
+                transform: perspective(1200px) rotateX(10deg) translateY(0)
             }
 
             50% {
-                transform: perspective(900px) rotateX(9deg) translateY(-2px)
+                transform: perspective(1200px) rotateX(11deg) translateY(-2px)
             }
         }
 
-        /* confetes */
         .confetti {
             position: fixed;
             inset: 0;
             pointer-events: none;
             overflow: hidden;
-            z-index: 50;
+            z-index: 999;
             display: none;
         }
 
@@ -652,11 +449,11 @@
 
         .confetti i {
             position: absolute;
-            top: -10vh;
+            top: -12vh;
             width: 10px;
             height: 16px;
             border-radius: 2px;
-            opacity: .9;
+            opacity: .92;
             transform: translate3d(0, 0, 0) rotate(0deg);
             animation: fall linear forwards;
             filter: drop-shadow(0 10px 10px rgba(0, 0, 0, .25));
@@ -664,109 +461,32 @@
 
         @keyframes fall {
             to {
-                transform: translate3d(var(--dx), 120vh, 0) rotate(var(--rot));
-                opacity: 1;
+                transform: translate3d(var(--dx), 125vh, 0) rotate(var(--rot));
             }
         }
 
-        /* modal fullscreen */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .55);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 60;
-            padding: 20px;
-        }
-
-        .overlay.show {
-            display: flex
-        }
-
-        .modal {
-            width: min(860px, 100%);
-            border-radius: 28px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .03));
-            border: 1px solid rgba(255, 255, 255, .14);
-            box-shadow: var(--shadow);
-            padding: 18px;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        .modal h2 {
-            margin: 0 0 8px 0;
-            font-size: 18px;
-            font-weight: 950;
-            letter-spacing: .2px;
-        }
-
-        .modal p {
-            margin: 0 0 14px 0;
-            color: rgba(234, 240, 255, .88);
-            font-weight: 800;
-            line-height: 1.45;
-            font-size: 13px;
-        }
-
-        .closeX {
+        .foot {
             position: absolute;
-            right: 12px;
-            top: 12px;
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
+            bottom: 14px;
+            left: 16px;
+            right: 16px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            color: rgba(234, 240, 255, .70);
+            font-size: 12px;
+            font-weight: 900;
+            z-index: 10;
+        }
+
+        .kbd {
+            padding: 6px 8px;
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, .14);
-            background: rgba(0, 0, 0, .22);
-            color: var(--text);
-            font-weight: 950;
-            cursor: pointer;
-            display: grid;
-            place-items: center;
-            box-shadow: var(--shadow2);
-        }
-
-        .modalGrid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        @media (max-width:720px) {
-            .modalGrid {
-                grid-template-columns: 1fr
-            }
-        }
-
-        .mini {
-            border-radius: 22px;
-            border: 1px solid rgba(255, 255, 255, .12);
             background: rgba(0, 0, 0, .18);
-            padding: 12px;
-            box-shadow: var(--shadow2);
-        }
-
-        .mini b {
-            font-weight: 950
-        }
-
-        .mini small {
-            display: block;
-            color: var(--muted);
-            font-weight: 800;
-            margin-top: 4px;
-            line-height: 1.35
-        }
-
-        /* Acessibilidade */
-        .sr {
-            position: absolute;
-            left: -9999px
+            color: rgba(234, 240, 255, .85);
+            font-weight: 1000;
         }
     </style>
 </head>
@@ -778,245 +498,99 @@
 
     <div class="wrap">
         <div class="stage">
-            <div class="card" id="tiltCard" aria-label="Desafio dos 10 segundos">
+            <div class="card" id="tiltCard">
                 <header>
                     <div class="brand">
                         <div class="logo" aria-hidden="true">
-                            <!-- TROQUE o arquivo abaixo pela sua logo -->
                             <img src="img/logo.png" alt="Logo Castelão"
                                 onerror="this.style.display='none'; this.parentNode.innerHTML='🏪';" />
                         </div>
-                        <div class="titlebox">
-                            <div class="title">
-                                DESAFIO DOS 10 SEGUNDOS
-                                <span class="pill">CASTELÃO</span>
-                            </div>
-                            <div class="subtitle">Pare o cronômetro em <b>10.00s</b> e concorra a prêmio.</div>
+                        <div class="tbox">
+                            <div class="t">DESAFIO 10.00s</div>
+                            <div class="s">Só ganha se cravar <b>10.00</b> no display.</div>
                         </div>
                     </div>
 
-                    <div class="right">
-                        <div class="chip" title="Janela de vitória">
-                            <strong>JANELA</strong>
-                            <span id="windowLabel">±0.10s</span>
-                        </div>
-                        <button class="btn ghost" id="btnHelp" type="button">
-                            <span>📌 Regras</span>
-                            <span class="shine" aria-hidden="true"></span>
-                        </button>
-                        <button class="btn ghost" id="btnFull" type="button" title="Tela cheia">
-                            <span>⛶ Tela cheia</span>
-                            <span class="shine" aria-hidden="true"></span>
-                        </button>
+                    <div class="topBtns">
+                        <button class="btn" id="btnFull" type="button">⛶ Tela cheia<span class="shine"
+                                aria-hidden="true"></span></button>
+                        <button class="btn" id="btnReset" type="button">↻ Nova rodada<span class="shine"
+                                aria-hidden="true"></span></button>
                     </div>
                 </header>
 
-                <div class="content">
-                    <div class="panel">
-                        <div class="timerArea">
-                            <div class="bigTimer" id="timerCard">
-                                <div class="digits" aria-live="polite">
-                                    <div class="main" id="sec">00</div>
-                                    <div class="ms" id="ms">.00</div>
-                                </div>
-                            </div>
-
-                            <div class="targetRow">
-                                <div class="badge">
-                                    <div class="dot" id="dot"></div>
-                                    <div>
-                                        <div><b>ALVO:</b> 10.00s</div>
-                                        <small id="hint">Toque em <b>INICIAR</b> e depois <b>PARAR</b>.</small>
-                                    </div>
-                                </div>
-
-                                <div class="badge">
-                                    <div style="display:flex; flex-direction:column; gap:2px">
-                                        <small style="color:var(--muted); font-weight:900">Tentativas nesta
-                                            rodada</small>
-                                        <div style="font-weight:950"><span id="tries">0</span>/<span
-                                                id="triesMax">1</span></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="cta">
-                                <button class="btn primary" id="btnStart" type="button">
-                                    <span>▶ INICIAR</span>
-                                    <span class="shine" aria-hidden="true"></span>
-                                </button>
-                                <button class="btn secondary" id="btnStop" type="button" disabled>
-                                    <span>⏸ PARAR</span>
-                                    <span class="shine" aria-hidden="true"></span>
-                                </button>
-                            </div>
-
-                            <button class="btn ghost" id="btnResetRound" type="button">
-                                <span>↻ Nova rodada</span>
-                                <span class="shine" aria-hidden="true"></span>
-                            </button>
+                <div class="center">
+                    <div class="timerCard" id="timerCard">
+                        <div class="digits" aria-live="polite">
+                            <div class="main" id="sec">00</div>
+                            <div class="ms" id="ms">.00</div>
                         </div>
-                    </div>
 
-                    <div class="panel">
-                        <div class="side">
-                            <div class="howto">
-                                <h3>Como funciona (rápido)</h3>
-                                <ol>
-                                    <li>Cliente mostra que <b>segue</b> o Instagram do Castelão.</li>
-                                    <li>Toque em <b>INICIAR</b> e depois em <b>PARAR</b> tentando acertar <b>10.00s</b>.
-                                    </li>
-                                    <li>Se parar dentro da janela, <b>GANHA</b> 🎁</li>
-                                </ol>
-                                <div class="note">
-                                    Dica: o link na bio é só para <b>treinar</b>. O prêmio vale apenas no mercado.
-                                </div>
+                        <div class="subline">
+                            <div class="pill">
+                                <span class="dot" id="dot"></span>
+                                <span class="hint" id="hint">Toque em <b>INICIAR</b> e depois em <b>PARAR</b>.</span>
                             </div>
-
-                            <div class="result">
-                                <h3>Resultado</h3>
-                                <div class="box">
-                                    <div class="resValue" id="finalTime">—</div>
-                                    <div class="diff" id="diff">Diferença: —</div>
-                                </div>
-                                <div class="status" id="status">
-                                    <div class="tag wait" id="tag">AGUARDANDO</div>
-                                    <div class="msg" id="msg">Pronto para começar.</div>
-                                </div>
+                            <div class="pill">
+                                <span style="color:var(--muted); font-weight:1000">Tentativa:</span>
+                                <span id="tries" style="font-weight:1000">0</span>/<span id="triesMax"
+                                    style="font-weight:1000">1</span>
                             </div>
+                        </div>
 
-                            <div class="howto">
-                                <h3>Configuração</h3>
-                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
-                                    <label class="badge" style="cursor:pointer; user-select:none">
-                                        <input id="chkSound" type="checkbox" checked style="transform:scale(1.2)" />
-                                        <div>
-                                            <b>Som</b><br><small>cliques e vitória</small>
-                                        </div>
-                                    </label>
+                        <div class="status" id="status">
+                            <div class="tag wait" id="tag">AGUARDANDO</div>
+                            <div class="msg" id="msg">Pronto para começar.</div>
+                        </div>
 
-                                    <label class="badge" style="cursor:pointer; user-select:none">
-                                        <input id="chkVibrate" type="checkbox" checked style="transform:scale(1.2)" />
-                                        <div>
-                                            <b>Vibração</b><br><small>perto do alvo</small>
-                                        </div>
-                                    </label>
-                                </div>
-
-                                <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
-                                    <button class="btn ghost" id="btnTight" type="button" title="Janela mais difícil">
-                                        <span>🎯 Difícil (±0.05)</span><span class="shine" aria-hidden="true"></span>
-                                    </button>
-                                    <button class="btn ghost" id="btnNormal" type="button" title="Janela padrão">
-                                        <span>✅ Padrão (±0.10)</span><span class="shine" aria-hidden="true"></span>
-                                    </button>
-                                </div>
-                            </div>
-
+                        <div class="actions">
+                            <button class="btn primary" id="btnStart" type="button">▶ INICIAR<span class="shine"
+                                    aria-hidden="true"></span></button>
+                            <button class="btn secondary" id="btnStop" type="button" disabled>⏸ PARAR<span class="shine"
+                                    aria-hidden="true"></span></button>
                         </div>
                     </div>
                 </div>
 
-                <div class="footerbar">
+                <div class="foot">
                     <div>Atalho: <span class="kbd">Espaço</span> iniciar/parar • <span class="kbd">R</span> nova rodada
                     </div>
-                    <div style="opacity:.85">Castelão • Ação promocional</div>
+                    <div style="opacity:.85">Castelão • Desafio presencial</div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Regras -->
-    <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
-        <div class="modal">
-            <button class="closeX" id="closeX" type="button" aria-label="Fechar">✕</button>
-            <h2 id="rulesTitle">Regras do Desafio</h2>
-            <p>Use este quadro para deixar tudo transparente e evitar discussão na loja.</p>
-
-            <div class="modalGrid">
-                <div class="mini">
-                    <b>Participação</b>
-                    <small>Cliente precisa seguir o Instagram do Castelão e mostrar no celular. 1 tentativa por
-                        rodada.</small>
-                </div>
-                <div class="mini">
-                    <b>Como vence</b>
-                    <small>Ganha quem parar o cronômetro em 10.00s dentro da janela configurada (padrão ±0.10s).</small>
-                </div>
-                <div class="mini">
-                    <b>Transparência</b>
-                    <small>Mostre o resultado no tablet e, se quiser, grave a tentativa (com autorização do
-                        cliente).</small>
-                </div>
-                <div class="mini">
-                    <b>Treino</b>
-                    <small>Link na bio serve para treinar. O prêmio vale apenas na participação presencial no
-                        mercado.</small>
-                </div>
-            </div>
-
-            <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
-                <button class="btn primary" id="btnOk" type="button">
-                    <span>Entendi</span><span class="shine" aria-hidden="true"></span>
-                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // ========= Config =========
-        let TARGET = 10.00;
-        let WINDOW = 0.10;         // janela padrão (±0.10)
-        let MAX_TRIES = 1;         // 1 tentativa por rodada
-        let running = false;
+        const TARGET_DISPLAY = "10.00";
+        const MAX_TRIES = 1;
 
-        // ========= Estado =========
+        let running = false;
         let startTs = 0;
         let raf = 0;
         let tries = 0;
-        let lastTime = 0;
+        let lastT = 0;
 
-        // ========= Elementos =========
-        const secEl = document.getElementById('sec');
-        const msEl = document.getElementById('ms');
-        const timerCard = document.getElementById('timerCard');
+        const secEl = document.getElementById("sec");
+        const msEl = document.getElementById("ms");
+        const timerCard = document.getElementById("timerCard");
+        const dot = document.getElementById("dot");
 
-        const btnStart = document.getElementById('btnStart');
-        const btnStop = document.getElementById('btnStop');
-        const btnResetRound = document.getElementById('btnResetRound');
+        const btnStart = document.getElementById("btnStart");
+        const btnStop = document.getElementById("btnStop");
+        const btnReset = document.getElementById("btnReset");
+        const btnFull = document.getElementById("btnFull");
 
-        const finalTimeEl = document.getElementById('finalTime');
-        const diffEl = document.getElementById('diff');
-        const tagEl = document.getElementById('tag');
-        const msgEl = document.getElementById('msg');
-        const triesEl = document.getElementById('tries');
-        const triesMaxEl = document.getElementById('triesMax');
+        const triesEl = document.getElementById("tries");
+        const triesMaxEl = document.getElementById("triesMax");
+        const tagEl = document.getElementById("tag");
+        const msgEl = document.getElementById("msg");
 
-        const windowLabel = document.getElementById('windowLabel');
-        const dot = document.getElementById('dot');
-
-        const chkSound = document.getElementById('chkSound');
-        const chkVibrate = document.getElementById('chkVibrate');
-
-        const btnTight = document.getElementById('btnTight');
-        const btnNormal = document.getElementById('btnNormal');
-
-        const overlay = document.getElementById('overlay');
-        const btnHelp = document.getElementById('btnHelp');
-        const btnOk = document.getElementById('btnOk');
-        const closeX = document.getElementById('closeX');
-
-        const btnFull = document.getElementById('btnFull');
-
-        const confetti = document.getElementById('confetti');
-
+        const confetti = document.getElementById("confetti");
         triesMaxEl.textContent = String(MAX_TRIES);
-        updateWindowLabel();
 
-        // ========= Áudio (WebAudio) =========
         let audioCtx = null;
         function beep(freq = 880, dur = 0.06, type = "sine", gain = 0.06) {
-            if (!chkSound.checked) return;
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const o = audioCtx.createOscillator();
@@ -1024,41 +598,38 @@
                 o.type = type;
                 o.frequency.value = freq;
                 g.gain.value = gain;
-                o.connect(g);
-                g.connect(audioCtx.destination);
+                o.connect(g); g.connect(audioCtx.destination);
                 o.start();
                 o.stop(audioCtx.currentTime + dur);
             } catch (e) { }
         }
-
         function winSound() {
             beep(523, .08, "triangle", .07);
             setTimeout(() => beep(659, .08, "triangle", .07), 90);
             setTimeout(() => beep(784, .12, "triangle", .08), 180);
         }
-
         function failSound() {
             beep(220, .08, "sawtooth", .05);
             setTimeout(() => beep(180, .12, "sawtooth", .05), 90);
         }
 
-        // ========= Helpers =========
-        const pad2 = (n) => String(n).padStart(2, '0');
-        function formatTime(t) {
-            const s = Math.floor(t);
-            const cs = Math.floor((t - s) * 100); // centésimos
-            return `${pad2(s)}.${pad2(cs)}`;
+        const pad2 = (n) => String(n).padStart(2, "0");
+        function formatDisplay(t) {
+            const cs = Math.round(t * 100); // arredondado (sem “facilitar”)
+            const s = Math.floor(cs / 100);
+            const c = cs % 100;
+            return `${pad2(Math.min(s, 99))}.${pad2(c)}`;
         }
 
         function setStatus(kind, text) {
             if (kind === "ok") {
                 tagEl.className = "tag ok";
-                tagEl.textContent = "VENCEU 🎉";
+                tagEl.textContent = "CRAVOU! 🎉";
                 msgEl.textContent = text || "Parabéns! Entregue o prêmio.";
             } else if (kind === "bad") {
                 tagEl.className = "tag bad";
                 tagEl.textContent = "NÃO FOI 😅";
-                msgEl.textContent = text || "Quase! Tenta na próxima rodada.";
+                msgEl.textContent = text || "Quase… nova rodada.";
             } else {
                 tagEl.className = "tag wait";
                 tagEl.textContent = "AGUARDANDO";
@@ -1066,97 +637,55 @@
             }
         }
 
-        function updateWindowLabel() {
-            windowLabel.textContent = `±${WINDOW.toFixed(2)}s`;
-        }
-
         function updateTries() {
             triesEl.textContent = String(tries);
             btnStart.disabled = running || (tries >= MAX_TRIES);
         }
 
-        // Efeito 3D tilt no card (suave)
-        const card = document.getElementById("tiltCard");
-        card.addEventListener("mousemove", (e) => {
-            const r = card.getBoundingClientRect();
-            const x = (e.clientX - r.left) / r.width - .5;
-            const y = (e.clientY - r.top) / r.height - .5;
-            const rx = (-y * 4).toFixed(2);
-            const ry = (x * 6).toFixed(2);
-            card.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg)`;
-        });
-        card.addEventListener("mouseleave", () => {
-            card.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg)`;
-        });
-
-        // ========= Confetti =========
         function burstConfetti() {
             confetti.innerHTML = "";
             confetti.classList.add("show");
 
-            const pieces = 120;
+            const pieces = 140;
             const w = window.innerWidth;
+            const colors = ["#ff7a18", "#1fb6ff", "#39ffb4", "#ffd166", "#ff4d6d", "#b8c0ff"];
 
             for (let i = 0; i < pieces; i++) {
                 const el = document.createElement("i");
-                const x = Math.random() * w;
-                const dx = (Math.random() * 2 - 1) * 200 + "px";
-                const rot = (Math.random() * 720 - 360) + "deg";
-                const dur = (Math.random() * 1.2 + 1.6).toFixed(2);
-
-                el.style.left = x + "px";
-                el.style.setProperty("--dx", dx);
-                el.style.setProperty("--rot", rot);
-                el.style.animationDuration = dur + "s";
-
-                // cores variando com a paleta
-                const colors = ["#ff7a18", "#1fb6ff", "#39ffb4", "#ffd166", "#ff4d6d", "#b8c0ff"];
+                el.style.left = (Math.random() * w) + "px";
+                el.style.setProperty("--dx", ((Math.random() * 2 - 1) * 220) + "px");
+                el.style.setProperty("--rot", (Math.random() * 720 - 360) + "deg");
+                el.style.animationDuration = (Math.random() * 1.1 + 1.6).toFixed(2) + "s";
                 el.style.background = colors[Math.floor(Math.random() * colors.length)];
-
                 confetti.appendChild(el);
             }
-
             setTimeout(() => confetti.classList.remove("show"), 2400);
         }
 
-        // ========= Loop =========
         function tick() {
             const now = performance.now();
             const t = (now - startTs) / 1000;
-            lastTime = t;
+            lastT = t;
 
-            // Atualiza display
-            const s = Math.floor(t);
-            const cs = Math.floor((t - s) * 100);
-            secEl.textContent = pad2(Math.min(s, 99));
-            msEl.textContent = "." + pad2(Math.min(cs, 99));
+            const disp = formatDisplay(t);
+            secEl.textContent = disp.slice(0, 2);
+            msEl.textContent = disp.slice(2);
 
-            // feedback perto do alvo
-            const diff = Math.abs(TARGET - t);
-
-            if (chkVibrate.checked) {
-                if (diff <= 0.35) timerCard.classList.add("pulseNear");
-                else timerCard.classList.remove("pulseNear");
+            // feedback só perto de 10s
+            const diff = Math.abs(10 - t);
+            if (diff <= 0.22) {
+                timerCard.classList.add("pulseNear");
+                dot.style.background = "var(--warn)";
+                dot.style.boxShadow = "0 0 0 7px rgba(255,209,102,.14)";
             } else {
                 timerCard.classList.remove("pulseNear");
-            }
-
-            // bolinha muda cor perto do alvo
-            if (diff <= WINDOW) {
-                dot.style.background = "var(--ok)";
-                dot.style.boxShadow = "0 0 0 6px rgba(57,255,180,.14)";
-            } else if (diff <= 0.35) {
                 dot.style.background = "var(--warn)";
-                dot.style.boxShadow = "0 0 0 6px rgba(255,209,102,.14)";
-            } else {
-                dot.style.background = "var(--warn)";
-                dot.style.boxShadow = "0 0 0 6px rgba(255,209,102,.12)";
+                dot.style.boxShadow = "0 0 0 7px rgba(255,209,102,.12)";
             }
 
             raf = requestAnimationFrame(tick);
         }
 
-        // ========= Ações =========
         function start() {
             if (running) return;
             if (tries >= MAX_TRIES) return;
@@ -1166,11 +695,9 @@
             btnStart.disabled = true;
             btnStop.disabled = false;
 
-            setStatus("wait", "Valendo! Tente parar em 10.00s.");
-            finalTimeEl.textContent = "—";
-            diffEl.textContent = "Diferença: —";
-
+            setStatus("wait", "Valendo! Só ganha se parar em 10.00.");
             beep(740, .06, "square", .05);
+
             raf = requestAnimationFrame(tick);
         }
 
@@ -1184,52 +711,43 @@
             tries++;
             updateTries();
 
-            // trava no tempo final
-            const t = lastTime;
-            const diff = (t - TARGET);
-            finalTimeEl.textContent = formatTime(t) + "s";
-            diffEl.textContent = "Diferença: " + (diff >= 0 ? "+" : "") + diff.toFixed(2) + "s";
-
-            const win = Math.abs(diff) <= WINDOW;
+            const disp = formatDisplay(lastT);
+            const win = (disp === TARGET_DISPLAY);
 
             if (win) {
-                setStatus("ok", "Parabéns! Você venceu dentro da janela.");
+                setStatus("ok", "CRAVOU 10.00! Vitória.");
                 winSound();
                 burstConfetti();
-                // feedback visual no timer
+                dot.style.background = "var(--ok)";
+                dot.style.boxShadow = "0 0 0 7px rgba(57,255,180,.16)";
                 timerCard.style.outline = "2px solid rgba(57,255,180,.45)";
-                timerCard.style.boxShadow = "0 0 0 8px rgba(57,255,180,.10), 0 20px 45px rgba(0,0,0,.45)";
             } else {
-                setStatus("bad", tries < MAX_TRIES ? "Quase! Você ainda tem tentativa." : "Quase! Nova rodada para tentar de novo.");
+                setStatus("bad", `Parou em ${disp}. Precisa cravar 10.00.`);
                 failSound();
-                timerCard.style.outline = "2px solid rgba(255,77,109,.35)";
-                timerCard.style.boxShadow = "0 0 0 8px rgba(255,77,109,.08), 0 20px 45px rgba(0,0,0,.45)";
+                dot.style.background = "var(--bad)";
+                dot.style.boxShadow = "0 0 0 7px rgba(255,77,109,.14)";
+                timerCard.style.outline = "2px solid rgba(255,77,109,.38)";
             }
 
-            setTimeout(() => {
-                timerCard.style.outline = "none";
-            }, 600);
-
-            // reseta pulsação
+            setTimeout(() => { timerCard.style.outline = "none"; }, 700);
             timerCard.classList.remove("pulseNear");
         }
 
         function resetRound() {
             running = false;
             cancelAnimationFrame(raf);
+
             tries = 0;
-            lastTime = 0;
+            lastT = 0;
 
             secEl.textContent = "00";
             msEl.textContent = ".00";
-            finalTimeEl.textContent = "—";
-            diffEl.textContent = "Diferença: —";
 
             btnStop.disabled = true;
             btnStart.disabled = false;
 
             dot.style.background = "var(--warn)";
-            dot.style.boxShadow = "0 0 0 6px rgba(255,209,102,.12)";
+            dot.style.boxShadow = "0 0 0 7px rgba(255,209,102,.12)";
 
             timerCard.classList.remove("pulseNear");
             setStatus("wait", "Pronto para começar.");
@@ -1237,12 +755,10 @@
             beep(520, .05, "sine", .04);
         }
 
-        // ========= Eventos =========
         btnStart.addEventListener("click", start);
         btnStop.addEventListener("click", stop);
-        btnResetRound.addEventListener("click", resetRound);
+        btnReset.addEventListener("click", resetRound);
 
-        // teclado (útil em notebook, não atrapalha tablet)
         window.addEventListener("keydown", (e) => {
             if (e.code === "Space") {
                 e.preventDefault();
@@ -1253,42 +769,18 @@
             }
         });
 
-        // Ajuste de dificuldade
-        btnTight.addEventListener("click", () => {
-            WINDOW = 0.05;
-            updateWindowLabel();
-            setStatus("wait", "Modo difícil ativado (±0.05s).");
-            beep(900, .06, "triangle", .05);
-        });
-        btnNormal.addEventListener("click", () => {
-            WINDOW = 0.10;
-            updateWindowLabel();
-            setStatus("wait", "Modo padrão ativado (±0.10s).");
-            beep(680, .06, "triangle", .05);
-        });
-
-        // Modal
-        function openRules() { overlay.classList.add("show"); beep(640, .05, "sine", .04); }
-        function closeRules() { overlay.classList.remove("show"); beep(520, .05, "sine", .04); }
-        btnHelp.addEventListener("click", openRules);
-        btnOk.addEventListener("click", closeRules);
-        closeX.addEventListener("click", closeRules);
-        overlay.addEventListener("click", (e) => { if (e.target === overlay) closeRules(); });
-
-        // Tela cheia
         btnFull.addEventListener("click", async () => {
             try {
                 if (!document.fullscreenElement) {
                     await document.documentElement.requestFullscreen();
-                    btnFull.querySelector("span").textContent = "⛶ Sair tela cheia";
+                    btnFull.childNodes[0].textContent = "⛶ Sair tela cheia";
                 } else {
                     await document.exitFullscreen();
-                    btnFull.querySelector("span").textContent = "⛶ Tela cheia";
+                    btnFull.childNodes[0].textContent = "⛶ Tela cheia";
                 }
             } catch (e) { }
         });
 
-        // Reset inicial
         resetRound();
     </script>
 </body>
