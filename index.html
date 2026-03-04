@@ -3,9 +3,8 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <title>Cronômetro Castelão • Desafio 10.00s</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Desafio 10.00s • Castelão</title>
 
     <style>
         :root {
@@ -19,9 +18,17 @@
             --muted: rgba(11, 42, 58, .62);
 
             --card: rgba(255, 255, 255, .92);
+            --card2: rgba(255, 255, 255, .78);
             --stroke: rgba(0, 0, 0, .06);
 
             --shadow: 0 18px 45px rgba(0, 0, 0, .18);
+            --shadowSoft: 0 12px 28px rgba(0, 0, 0, .12);
+
+            --good: #00d978;
+            --warn: #ffb900;
+            --bad: #ff3b3b;
+
+            --gap: 14px;
         }
 
         * {
@@ -31,16 +38,17 @@
         html,
         body {
             height: 100%;
-            width: 100%;
         }
 
         body {
             margin: 0;
             overflow: hidden;
+            /* sem rolagem */
             font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
             background:
-                radial-gradient(900px 700px at 20% 15%, rgba(255, 160, 60, .14), transparent 60%),
-                radial-gradient(900px 700px at 85% 25%, rgba(60, 160, 255, .16), transparent 62%),
+                radial-gradient(900px 700px at 20% 12%, rgba(255, 160, 60, .16), transparent 60%),
+                radial-gradient(900px 700px at 85% 20%, rgba(60, 160, 255, .18), transparent 62%),
+                radial-gradient(1000px 800px at 50% 90%, rgba(10, 200, 180, .10), transparent 60%),
                 linear-gradient(180deg, #eef3f7, #dfe8ef);
             color: var(--txt);
             -webkit-tap-highlight-color: transparent;
@@ -48,18 +56,19 @@
             touch-action: manipulation;
         }
 
+        /* ===== APP ===== */
         .app {
             height: 100svh;
             height: 100dvh;
-            width: 100%;
             display: grid;
             grid-template-rows: auto 1fr auto;
             gap: 12px;
             padding: env(safe-area-inset-top) 14px env(safe-area-inset-bottom) 14px;
-            max-width: 860px;
+            max-width: 920px;
             margin: 0 auto;
         }
 
+        /* ===== TOPBAR ===== */
         .topbar {
             display: flex;
             align-items: center;
@@ -70,6 +79,20 @@
             background: linear-gradient(180deg, var(--bgTop), var(--bgBot));
             box-shadow: var(--shadow);
             color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topbar::after {
+            content: "";
+            position: absolute;
+            inset: -40px -80px auto auto;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .20), transparent 60%);
+            transform: rotate(18deg);
+            pointer-events: none;
+            opacity: .9;
         }
 
         .brand {
@@ -77,6 +100,7 @@
             align-items: center;
             gap: 12px;
             min-width: 0;
+            z-index: 1;
         }
 
         .brandLogo {
@@ -115,6 +139,7 @@
         }
 
         .fullBtn {
+            z-index: 1;
             border: 0;
             padding: 14px 18px;
             border-radius: 18px;
@@ -131,14 +156,29 @@
             transform: scale(.98);
         }
 
+        /* ===== MAIN (PROPORCIONAL E SEM BURACOS) ===== */
         .main {
             min-height: 0;
             display: grid;
-            grid-template-rows: auto auto 1fr auto;
-            gap: 14px;
-            align-items: start;
-            justify-items: center;
+            grid-template-rows:
+                auto
+                /* timer */
+                auto
+                /* status */
+                1fr
+                /* área do botão */
+                auto;
+            /* reset */
+            gap: var(--gap);
+            align-items: center;
             padding: 6px 0;
+        }
+
+        /* Timer */
+        .timerWrap {
+            display: grid;
+            gap: 10px;
+            justify-items: center;
         }
 
         .timer {
@@ -149,31 +189,44 @@
             letter-spacing: 1px;
             line-height: 1;
             text-shadow: 0 10px 25px rgba(0, 0, 0, .10);
+            position: relative;
         }
 
         .timer .sec {
-            font-size: clamp(58px, 13.5vw, 124px);
+            font-size: clamp(58px, 13.5vw, 132px);
         }
 
         .timer .dot {
-            font-size: clamp(22px, 5.5vw, 52px);
+            font-size: clamp(22px, 5.5vw, 56px);
             margin: 0 10px;
             opacity: .9;
+            transform: translateY(-2px);
         }
 
         .timer .ms {
-            font-size: clamp(36px, 8.5vw, 84px);
+            font-size: clamp(36px, 8.5vw, 90px);
             opacity: .95;
         }
 
+        /* brilho sutil atrás do timer */
+        .timerGlow {
+            width: min(680px, 92%);
+            height: 70px;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, .08), transparent 60%);
+            filter: blur(10px);
+            margin-top: -10px;
+            opacity: .8;
+        }
+
+        /* Status */
         .statusPill {
             justify-self: center;
-            width: min(640px, 92%);
+            width: min(680px, 92%);
             padding: 14px 18px;
             border-radius: 999px;
             background: var(--card);
             border: 1px solid var(--stroke);
-            box-shadow: 0 16px 35px rgba(0, 0, 0, .10);
+            box-shadow: var(--shadowSoft);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -181,6 +234,19 @@
             font-weight: 900;
             color: rgba(11, 42, 58, .92);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .statusPill::after {
+            content: "";
+            position: absolute;
+            inset: -40px auto auto -60px;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .55), transparent 60%);
+            opacity: .45;
+            pointer-events: none;
         }
 
         .statusDot {
@@ -190,6 +256,11 @@
             background: rgba(11, 42, 58, .30);
             box-shadow: 0 0 0 5px rgba(11, 42, 58, .08);
             flex: 0 0 auto;
+            z-index: 1;
+        }
+
+        .statusText {
+            z-index: 1;
         }
 
         .statusPill.good {
@@ -197,7 +268,7 @@
         }
 
         .statusPill.good .statusDot {
-            background: #00d978;
+            background: var(--good);
             box-shadow: 0 0 0 5px rgba(0, 217, 120, .18);
         }
 
@@ -206,7 +277,7 @@
         }
 
         .statusPill.warn .statusDot {
-            background: #ffb900;
+            background: var(--warn);
             box-shadow: 0 0 0 5px rgba(255, 185, 0, .18);
         }
 
@@ -215,21 +286,21 @@
         }
 
         .statusPill.bad .statusDot {
-            background: #ff3b3b;
+            background: var(--bad);
             box-shadow: 0 0 0 5px rgba(255, 60, 60, .18);
         }
 
+        /* Área do botão */
         .btnArea {
-            width: 100%;
             min-height: 0;
             display: grid;
-            place-items: start center;
-            padding-top: 6px;
+            place-items: center;
         }
 
+        /* Botão principal - proporcional ao mobile */
         .bigBtn {
-            width: clamp(170px, min(62vw, 30svh), 300px);
-            height: clamp(170px, min(62vw, 30svh), 300px);
+            width: clamp(180px, min(62vw, 30svh), 320px);
+            height: clamp(180px, min(62vw, 30svh), 320px);
 
             border-radius: 999px;
             border: 0;
@@ -244,30 +315,64 @@
             place-items: center;
 
             background:
-                radial-gradient(600px 500px at 35% 30%, rgba(255, 255, 255, .22), transparent 55%),
-                radial-gradient(600px 500px at 65% 75%, rgba(0, 0, 0, .18), transparent 55%),
+                radial-gradient(700px 560px at 35% 30%, rgba(255, 255, 255, .22), transparent 55%),
+                radial-gradient(700px 560px at 65% 75%, rgba(0, 0, 0, .18), transparent 55%),
                 linear-gradient(180deg, var(--orangeA), var(--orangeB));
 
             box-shadow:
                 0 30px 70px rgba(0, 0, 0, .22),
-                inset 0 0 0 10px rgba(255, 255, 255, .18);
+                inset 0 0 0 12px rgba(255, 255, 255, .18);
+
+            position: relative;
             transform: translateZ(0);
+            transition: transform .08s ease, filter .2s ease;
+        }
+
+        .bigBtn::after {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .22);
+            opacity: .95;
+            pointer-events: none;
         }
 
         .bigBtn:active {
             transform: scale(.985);
+            filter: brightness(.98);
         }
 
         .bigBtn.stop {
             background:
-                radial-gradient(600px 500px at 35% 30%, rgba(255, 255, 255, .18), transparent 55%),
-                radial-gradient(600px 500px at 65% 75%, rgba(0, 0, 0, .22), transparent 55%),
-                linear-gradient(180deg, rgba(255, 47, 47, .82), rgba(215, 20, 20, .78));
+                radial-gradient(700px 560px at 35% 30%, rgba(255, 255, 255, .18), transparent 55%),
+                radial-gradient(700px 560px at 65% 75%, rgba(0, 0, 0, .22), transparent 55%),
+                linear-gradient(180deg, rgba(255, 47, 47, .86), rgba(205, 16, 16, .82));
         }
 
+        /* animação de vitória */
+        .winPulse {
+            animation: winPulse .65s ease-in-out 0s 3;
+        }
+
+        @keyframes winPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.03);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Reset */
         .resetBtn {
             justify-self: center;
-            width: min(680px, 92%);
+            width: min(720px, 92%);
             padding: 18px 18px;
             border-radius: 22px;
             border: 0;
@@ -277,12 +382,15 @@
             letter-spacing: .7px;
             box-shadow: var(--shadow);
             cursor: pointer;
+            transition: transform .08s ease, filter .2s ease;
         }
 
         .resetBtn:active {
             transform: scale(.99);
+            filter: brightness(.98);
         }
 
+        /* Footer */
         .footNote {
             text-align: center;
             font-size: 14px;
@@ -298,9 +406,10 @@
             margin: 0 10px;
         }
 
+        /* Telas baixas (refino) */
         @media (max-height: 740px) {
-            .app {
-                gap: 10px;
+            :root {
+                --gap: 12px;
             }
 
             .topbar {
@@ -321,10 +430,6 @@
                 font-size: 14px;
             }
 
-            .main {
-                gap: 12px;
-            }
-
             .statusPill {
                 padding: 12px 14px;
             }
@@ -338,8 +443,16 @@
             }
 
             .bigBtn {
-                width: clamp(160px, min(58vw, 28svh), 270px);
-                height: clamp(160px, min(58vw, 28svh), 270px);
+                width: clamp(170px, min(58vw, 28svh), 290px);
+                height: clamp(170px, min(58vw, 28svh), 290px);
+            }
+
+            .timer .sec {
+                font-size: clamp(52px, 12.5vw, 118px);
+            }
+
+            .timer .ms {
+                font-size: clamp(32px, 8vw, 82px);
             }
         }
     </style>
@@ -349,7 +462,8 @@
     <div class="app">
         <header class="topbar">
             <div class="brand">
-                <img class="brandLogo" src="img/logo.png" alt="Castelão" />
+                <!-- Troque pela sua logo -->
+                <img class="brandLogo" src="https://i.imgur.com/8QfQYpL.png" alt="Castelão" />
                 <div class="brandText">
                     <div class="title">DESAFIO 10.00s</div>
                     <div class="subtitle">10.00 = prêmio TOP • 9.95–10.05 = prêmio menor</div>
@@ -360,15 +474,18 @@
         </header>
 
         <main class="main">
-            <div class="timer" aria-label="Cronômetro">
-                <span class="sec" id="sec">00</span>
-                <span class="dot">.</span>
-                <span class="ms" id="ms">00</span>
+            <div class="timerWrap">
+                <div class="timer" aria-label="Cronômetro">
+                    <span class="sec" id="sec">00</span>
+                    <span class="dot">.</span>
+                    <span class="ms" id="ms">00</span>
+                </div>
+                <div class="timerGlow" aria-hidden="true"></div>
             </div>
 
             <div class="statusPill" id="statusPill">
                 <span class="statusDot"></span>
-                <span id="statusText">Toque em INICIAR para começar</span>
+                <span class="statusText" id="statusText">Toque em INICIAR para começar</span>
             </div>
 
             <div class="btnArea">
@@ -385,10 +502,12 @@
     </div>
 
     <script>
+        // ======= CONFIG DO DESAFIO =======
         const TARGET = 10.00;
         const TOL_MIN = 9.95;
         const TOL_MAX = 10.05;
 
+        // ======= ELEMENTOS =======
         const secEl = document.getElementById('sec');
         const msEl = document.getElementById('ms');
         const toggleBtn = document.getElementById('toggleBtn');
@@ -397,11 +516,13 @@
         const statusPill = document.getElementById('statusPill');
         const fullBtn = document.getElementById('fullBtn');
 
+        // ======= ESTADO =======
         let running = false;
         let rafId = null;
         let startAt = 0;
         let elapsed = 0;
 
+        // ======= HELPERS =======
         function pad2(n) { return String(n).padStart(2, '0'); }
 
         function render(seconds) {
@@ -417,6 +538,12 @@
             statusText.textContent = text;
         }
 
+        function vibrate(ms) {
+            try {
+                if (navigator.vibrate) navigator.vibrate(ms);
+            } catch (e) { }
+        }
+
         function loop() {
             if (!running) return;
             const now = performance.now();
@@ -425,11 +552,26 @@
             rafId = requestAnimationFrame(loop);
         }
 
+        // seconds já vem com 2 casas
         function evaluateResult(seconds) {
             const v = seconds;
-            if (v === TARGET) { setStatus('good', `CRAVOU ${v.toFixed(2)}! 🎉 Prêmio TOP`); return; }
-            if (v >= TOL_MIN && v <= TOL_MAX) { setStatus('warn', `Parou em ${v.toFixed(2)} • prêmio menor`); return; }
+
+            if (v === TARGET) {
+                setStatus('good', `CRAVOU ${v.toFixed(2)}! 🎉 Prêmio TOP`);
+                toggleBtn.classList.add('winPulse');
+                vibrate([60, 40, 60, 40, 120]);
+                setTimeout(() => toggleBtn.classList.remove('winPulse'), 2200);
+                return;
+            }
+
+            if (v >= TOL_MIN && v <= TOL_MAX) {
+                setStatus('warn', `Parou em ${v.toFixed(2)} • prêmio menor`);
+                vibrate(50);
+                return;
+            }
+
             setStatus('bad', `Parou em ${v.toFixed(2)} • tente de novo`);
+            vibrate(30);
         }
 
         function start() {
@@ -440,6 +582,7 @@
             setStatus('', 'Valendo! Tenta cravar 10.00');
             startAt = performance.now();
             rafId = requestAnimationFrame(loop);
+            vibrate(20);
         }
 
         function stop() {
@@ -452,6 +595,7 @@
             if (rafId) cancelAnimationFrame(rafId);
             rafId = null;
 
+            // ✅ TRAVA UM ÚNICO VALOR FINAL (2 casas)
             const final = Math.round(elapsed * 100) / 100;
             elapsed = final;
 
@@ -472,14 +616,17 @@
 
             toggleBtn.textContent = 'INICIAR';
             toggleBtn.classList.remove('stop');
+            toggleBtn.classList.remove('winPulse');
 
             render(0);
             setStatus('', 'Toque em INICIAR para começar');
+            vibrate(15);
         }
 
         toggleBtn.addEventListener('click', () => running ? stop() : start());
         resetBtn.addEventListener('click', reset);
 
+        // Fullscreen
         fullBtn.addEventListener('click', async () => {
             try {
                 const root = document.documentElement;
@@ -494,6 +641,7 @@
             } catch (e) { }
         });
 
+        // init
         reset();
     </script>
 </body>
